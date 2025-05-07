@@ -9,6 +9,7 @@ Benchmarks for Instaseis.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 from abc import ABCMeta, abstractmethod, abstractproperty
 import argparse
 import colorama
@@ -174,7 +175,7 @@ class BufferedFixedSrcRecRoDOffSeismogramGeneration(InstaseisBenchmark):
 
     @property
     def description(self):
-        return "Buffered, fixed source and receiver, " "read_on_demand=False"
+        return "Buffered, fixed source and receiver, read_on_demand=False"
 
 
 class BufferedFixedSrcRecRoDOffSeismogramGenerationNoObsPy(InstaseisBenchmark):
@@ -211,7 +212,7 @@ class UnbufferedFixedSrcRecRoDOffSeismogramGenerationNoObsPy(
 
     @property
     def description(self):
-        return "Unbuffered, fixed source and receiver, " "read_on_demand=False"
+        return "Unbuffered, fixed source and receiver, read_on_demand=False"
 
 
 class BufferedFixedSrcRecRoDOnSeismogramGeneration(InstaseisBenchmark):
@@ -227,7 +228,7 @@ class BufferedFixedSrcRecRoDOnSeismogramGeneration(InstaseisBenchmark):
 
     @property
     def description(self):
-        return "Buffered, fixed source and receiver, " "read_on_demand=True"
+        return "Buffered, fixed source and receiver, read_on_demand=True"
 
 
 class Buffered2DegreeLatLngDepthScatter(InstaseisBenchmark):

@@ -301,13 +301,13 @@ def repack_databases():
     # Important is that the name is fairly similar to the original
     # as some tests use the patterns in the name.
     dbs["transposed_100s_db_bwd_displ_only"] = transposed_bw_db
-    dbs[
-        "transposed_and_back_100s_db_bwd_displ_only"
-    ] = transposed_and_back_bw_db
+    dbs["transposed_and_back_100s_db_bwd_displ_only"] = (
+        transposed_and_back_bw_db
+    )
     dbs["repacked_100s_db_bwd_displ_only"] = repacked_bw_db
-    dbs[
-        "repacked_transposed_100s_db_bwd_displ_only"
-    ] = repacked_transposed_bw_db
+    dbs["repacked_transposed_100s_db_bwd_displ_only"] = (
+        repacked_transposed_bw_db
+    )
     dbs["merged_100s_db_bwd_displ_only"] = merged_bw_db
     dbs["merged_transposed_100s_db_bwd_displ_only"] = merged_transposed_bw_db
 

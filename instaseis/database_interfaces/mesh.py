@@ -21,6 +21,7 @@ instead of
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 from collections import OrderedDict
 
 import h5py
@@ -38,7 +39,7 @@ class Buffer(object):
     """
 
     def __init__(self, max_size_in_mb=100):
-        self._max_size_in_bytes = max_size_in_mb * 1024 ** 2
+        self._max_size_in_bytes = max_size_in_mb * 1024**2
         self._total_size = 0
         self._buffer = OrderedDict()
         self._hits = 0
@@ -83,7 +84,7 @@ class Buffer(object):
             self._total_size -= self._get_nbytes(v)
 
     def get_size_mb(self):
-        return float(self._total_size) / 1024 ** 2
+        return float(self._total_size) / 1024**2
 
     @property
     def efficiency(self):

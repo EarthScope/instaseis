@@ -11,6 +11,7 @@ AxiSEM.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import collections
 import numpy as np
 
@@ -62,7 +63,6 @@ class ForwardMergedInstaseisDB(BaseNetCDFInstaseisDB):
         self._parse_mesh(netcdf_file)
 
     def _parse_mesh(self, filename):
-
         MeshCollection_merged = collections.namedtuple(
             "MeshCollection_merged", ["merged"]
         )

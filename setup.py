@@ -26,6 +26,7 @@ For more information visit http://www.instaseis.net.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 from distutils.ccompiler import CCompiler
 from distutils.errors import DistutilsExecError, CompileError
 from distutils.unixccompiler import UnixCCompiler
@@ -161,43 +162,51 @@ EXTRAS_REQUIRE = {
 
 from setuptools.command.build_ext import build_ext
 
+
 class FortranBuildExt(build_ext):
     """Custom build extension that enforces the correct order for Fortran modules."""
-    
+
     def build_extensions(self):
         # Disable parallel builds to ensure correct module compilation order
         self.parallel = None
         super().build_extensions()
-    
+
     def build_extension(self, ext):
         # Check if this extension has Fortran files
-        fortran_sources = [s for s in ext.sources if s.endswith('.f90')]
+        fortran_sources = [s for s in ext.sources if s.endswith(".f90")]
         if fortran_sources:
             # Create a temporary directory for module files
             module_dir = os.path.join(self.build_temp, "fortran_modules")
             os.makedirs(module_dir, exist_ok=True)
-            
+
             # Compile each Fortran file in sequence
             objects = []
             for src_file in fortran_sources:
                 obj_file = os.path.join(
-                    module_dir, 
-                    os.path.basename(src_file).replace('.f90', '.o')
+                    module_dir,
+                    os.path.basename(src_file).replace(".f90", ".o"),
                 )
-                
+
                 # Compile with gfortran
                 cmd = [
-                    "gfortran", "-O", "-fPIC", "-c", "-ffree-form",
-                    f"-J{module_dir}", f"-I{module_dir}",
-                    src_file, "-o", obj_file
+                    "gfortran",
+                    "-O",
+                    "-fPIC",
+                    "-c",
+                    "-ffree-form",
+                    f"-J{module_dir}",
+                    f"-I{module_dir}",
+                    src_file,
+                    "-o",
+                    obj_file,
                 ]
                 self.spawn(cmd)
                 objects.append(obj_file)
-            
+
             # Set compiled objects and remove Fortran files from sources
             ext.extra_objects = objects
-            ext.sources = [s for s in ext.sources if not s.endswith('.f90')]
-        
+            ext.sources = [s for s in ext.sources if not s.endswith(".f90")]
+
         # Continue with standard build process
         super().build_extension(ext)
 

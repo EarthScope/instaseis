@@ -11,6 +11,7 @@ AxiSEM.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 from abc import ABCMeta, abstractmethod
 import collections
 

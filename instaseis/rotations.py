@@ -10,6 +10,7 @@ Functions dealing with rotations.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import numpy as np
 
 
@@ -26,7 +27,7 @@ def rotate_frame_rd(x, y, z, phi, theta):
     yp = yp_cp
     zp = xp_cp * np.sin(theta) + zp_cp * np.cos(theta)
 
-    srd = np.sqrt(xp ** 2 + yp ** 2)
+    srd = np.sqrt(xp**2 + yp**2)
     zrd = zp
     phi_cp = np.arctan2(yp, xp)
     if phi_cp < 0.0:
@@ -250,7 +251,7 @@ def coord_transform_xyz_to_lat_lon_depth(x, y, z, planet_radius=6371e3):
     northpole to latitude, longitude, depth
     """
 
-    r = (x ** 2 + y ** 2 + z ** 2) ** 0.5
+    r = (x**2 + y**2 + z**2) ** 0.5
     theta = np.arccos(z / r)
     phi = np.arctan2(y, x)
 

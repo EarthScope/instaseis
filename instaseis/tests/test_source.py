@@ -9,6 +9,7 @@ Tests for source handling.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import io
 import obspy
 import os
@@ -487,9 +488,9 @@ def test_fault_vectors_lmn():
     np.testing.assert_allclose(np.cross(n, l), m, atol=1e-15)
 
     # vectors should be normalized
-    np.testing.assert_allclose(np.array([1.0]), (l ** 2).sum())
-    np.testing.assert_allclose(np.array([1.0]), (m ** 2).sum())
-    np.testing.assert_allclose(np.array([1.0]), (n ** 2).sum())
+    np.testing.assert_allclose(np.array([1.0]), (l**2).sum())
+    np.testing.assert_allclose(np.array([1.0]), (m**2).sum())
+    np.testing.assert_allclose(np.array([1.0]), (n**2).sum())
 
 
 def test_strike_dip_rake_from_ln():

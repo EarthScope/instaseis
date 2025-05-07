@@ -9,6 +9,7 @@ Tests for the instaseis remote database.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import copy
 import numpy as np
 import responses
@@ -179,7 +180,7 @@ def test_initialization_failures():
             instaseis.open_db("http://localhost:8765432")
 
     assert err.value.args[0] == (
-        "Failed to connect to remote Instaseis " "server due to: random"
+        "Failed to connect to remote Instaseis server due to: random"
     )
 
     # Invalid JSON returned.
@@ -192,7 +193,7 @@ def test_initialization_failures():
             instaseis.open_db("http://localhost:8765432")
 
     assert err.value.args[0].startswith(
-        "Instaseis server responded with " "invalid response:"
+        "Instaseis server responded with invalid response:"
     )
 
     # Incompatible version number - should raise a warning.

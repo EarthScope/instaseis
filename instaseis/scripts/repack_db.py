@@ -11,6 +11,7 @@ Requires click, netCDF4, and numpy.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import contextlib
 import math
 import os
@@ -53,11 +54,10 @@ def repack_file(
     assert os.path.exists(input_filename)
     assert not os.path.exists(output_filename)
 
-    with netCDF4.Dataset(
-        input_filename, "r", format="NETCDF4"
-    ) as f_in, netCDF4.Dataset(
-        output_filename, "w", format="NETCDF4"
-    ) as f_out:
+    with (
+        netCDF4.Dataset(input_filename, "r", format="NETCDF4") as f_in,
+        netCDF4.Dataset(output_filename, "w", format="NETCDF4") as f_out,
+    ):
         recursive_copy(
             src=f_in,
             dst=f_out,
@@ -555,8 +555,7 @@ def _merge_files(input, out, contiguous, compression_level, quiet):
 @click.option(
     "--contiguous",
     is_flag=True,
-    help="Write a contiguous array - will turn off chunking and "
-    "compression",
+    help="Write a contiguous array - will turn off chunking and compression",
 )
 @click.option(
     "--compression_level",

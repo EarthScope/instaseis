@@ -9,6 +9,7 @@ Tests for the receiver handling.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import io
 import obspy
 import os

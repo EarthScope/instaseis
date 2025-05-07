@@ -9,6 +9,7 @@ Tests for the finite source route of the Instaseis server.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import copy
 import io
 import os
@@ -97,9 +98,7 @@ def test_triggering_random_error_during_parsing(reciprocal_clients):
     # default parameters
     params = {"receiverlongitude": 11, "receiverlatitude": 22}
 
-    with mock.patch(
-        "instaseis.source.FiniteSource" ".from_usgs_param_file"
-    ) as p:
+    with mock.patch("instaseis.source.FiniteSource.from_usgs_param_file") as p:
         p.side_effect = ValueError("random crash")
         request = fetch_sync(
             client,
@@ -110,7 +109,7 @@ def test_triggering_random_error_during_parsing(reciprocal_clients):
 
     assert request.code == 400
     assert request.reason == (
-        "Could not parse the body contents. " "Incorrect USGS param file?"
+        "Could not parse the body contents. Incorrect USGS param file?"
     )
 
 
@@ -282,7 +281,7 @@ def test_finite_source_retrieval(reciprocal_clients, usgs_param):
 
     assert request.code == 500
     assert request.reason.startswith(
-        "Endtime larger than the extracted " "endtime"
+        "Endtime larger than the extracted endtime"
     )
 
     # One more with resampling parameters and different units.
@@ -599,7 +598,7 @@ def test_various_failure_conditions(
     )
     assert request.code == 400
     assert request.reason == (
-        "The `starttime` must be before the seismogram " "ends."
+        "The `starttime` must be before the seismogram ends."
     )
 
     # Starttime too early.
@@ -628,7 +627,7 @@ def test_various_failure_conditions(
     )
     assert request.code == 400
     assert request.reason == (
-        "The end time of the seismograms lies outside " "the allowed range."
+        "The end time of the seismograms lies outside the allowed range."
     )
 
     # Useless phase relative times. pdiff does not exist at the epicentral
@@ -692,7 +691,7 @@ def test_various_failure_conditions(
     )
     assert request.code == 400
     assert request.reason == (
-        "Station coordinate query returned invalid " "coordinates."
+        "Station coordinate query returned invalid coordinates."
     )
 
     # Coordinates not found

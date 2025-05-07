@@ -9,6 +9,7 @@ Instaseis database class for remote access over HTTP.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import io
 import numpy as np
 import obspy

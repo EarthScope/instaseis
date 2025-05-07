@@ -10,6 +10,7 @@ Basic integration tests for the AxiSEM database Python interface.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import inspect
 import io
 import math
@@ -939,7 +940,7 @@ def test_greens_function_failures(bwd_db):
     with pytest.raises(ValueError) as err:
         db.get_greens_function(1000.0, depth_in_m, definition="seiscomp")
     assert err.value.args[0] == (
-        "epicentral_distance_degree should be in " "[0.0, 180.0]"
+        "epicentral_distance_degree should be in [0.0, 180.0]"
     )
 
     # Source depth has to be positive.
@@ -958,7 +959,7 @@ def test_greens_function_failures(bwd_db):
             epicentral_distance_degree, depth_in_m, definition="seiscomp"
         )
     assert err.value.args[0] == (
-        "forward DB cannot be used with " "get_greens_function()"
+        "forward DB cannot be used with get_greens_function()"
     )
 
     # Requires both components
@@ -1372,8 +1373,7 @@ def test_time_settings_with_resample_stf(db):
         )
     assert isinstance(err.value, ValueError)
     assert err.value.args[0] == (
-        "'remove_source_shift' argument not "
-        "compatible with 'reconvolve_stf'."
+        "'remove_source_shift' argument not compatible with 'reconvolve_stf'."
     )
 
     # No matter the dt, the first sample will always be set to the origin time.
@@ -2081,7 +2081,7 @@ def test_some_failure_conditions():
             components=("Z", "N", "E", "R", "T"),
         )
     assert err.value.args[0].startswith(
-        "Receiver object/file contains " "multiple stations."
+        "Receiver object/file contains multiple stations."
     )
 
     # Wrong kind.
@@ -2092,9 +2092,9 @@ def test_some_failure_conditions():
 
 def test_sizeof_fmt_function():
     assert sizeof_fmt(1024) == "1.0 KB"
-    assert sizeof_fmt(1024 ** 2) == "1.0 MB"
-    assert sizeof_fmt(1024 ** 3) == "1.0 GB"
-    assert sizeof_fmt(1024 ** 4) == "1.0 TB"
+    assert sizeof_fmt(1024**2) == "1.0 MB"
+    assert sizeof_fmt(1024**3) == "1.0 GB"
+    assert sizeof_fmt(1024**4) == "1.0 TB"
 
 
 def test_failures_when_opening_databases(tmpdir):
@@ -2123,7 +2123,7 @@ def test_failures_when_opening_databases(tmpdir):
     with pytest.raises(InstaseisError) as err:
         find_and_open_files(tmpdir.strpath)
     assert err.value.args[0].startswith(
-        "1, 2 or 4 netCDF must be present in " "the folder structure."
+        "1, 2 or 4 netCDF must be present in the folder structure."
     )
 
     # Two netcdf files but in funny places.
@@ -2164,8 +2164,7 @@ def test_failures_when_opening_databases(tmpdir):
     with pytest.raises(InstaseisError) as err:
         find_and_open_files(tmpdir.strpath)
     assert err.value.args[0] == (
-        "Expecting all four elemental moment tensor "
-        "subfolders to be present."
+        "Expecting all four elemental moment tensor subfolders to be present."
     )
 
 
@@ -2403,7 +2402,7 @@ def test_epicentral_distance_not_in_db(bwd_db):
     with pytest.raises(ValueError) as err:
         db.get_seismograms(source=src, receiver=rec)
     assert err.value.args[0] == (
-        "Epicentral distance is 180.0 but should be " "in [0.0, 170.0]."
+        "Epicentral distance is 180.0 but should be in [0.0, 170.0]."
     )
 
     rec.longitude = 10.0
@@ -2412,7 +2411,7 @@ def test_epicentral_distance_not_in_db(bwd_db):
     with pytest.raises(ValueError) as err:
         db.get_seismograms(source=src, receiver=rec)
     assert err.value.args[0] == (
-        "Epicentral distance is 10.0 but should be " "in [20.0, 180.0]."
+        "Epicentral distance is 10.0 but should be in [20.0, 180.0]."
     )
 
 

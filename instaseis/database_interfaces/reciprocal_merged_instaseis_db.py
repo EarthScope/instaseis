@@ -11,6 +11,7 @@ AxiSEM.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import collections
 import numpy as np
 
@@ -62,7 +63,6 @@ class ReciprocalMergedInstaseisDB(BaseNetCDFInstaseisDB):
         self._parse_mesh(netcdf_file)
 
     def _parse_mesh(self, filename):
-
         MeshCollection_merged = collections.namedtuple(
             "MeshCollection_merged", ["merged"]
         )
@@ -394,10 +394,10 @@ class ReciprocalMergedInstaseisDB(BaseNetCDFInstaseisDB):
         utemp_x = utemp[:, :, :, :3]
         utemp_x = np.require(utemp_x, requirements=["F"], dtype=np.float64)
         for i in range(3):
-            final_displacement_x[
-                :, i
-            ] = spectral_basis.lagrange_interpol_2D_td(
-                col_points_xi, col_points_eta, utemp_x[:, :, :, i], xi, eta
+            final_displacement_x[:, i] = (
+                spectral_basis.lagrange_interpol_2D_td(
+                    col_points_xi, col_points_eta, utemp_x[:, :, :, i], xi, eta
+                )
             )
 
         # Requires a copy to not modify the cached values in place because this
@@ -408,10 +408,10 @@ class ReciprocalMergedInstaseisDB(BaseNetCDFInstaseisDB):
         utemp_z = np.require(utemp_z, requirements=["F"], dtype=np.float64)
         final_displacement_z = np.empty((utemp.shape[0], 3), order="F")
         for i in range(3):
-            final_displacement_z[
-                :, i
-            ] = spectral_basis.lagrange_interpol_2D_td(
-                col_points_xi, col_points_eta, utemp_z[:, :, :, i], xi, eta
+            final_displacement_z[:, i] = (
+                spectral_basis.lagrange_interpol_2D_td(
+                    col_points_xi, col_points_eta, utemp_z[:, :, :, i], xi, eta
+                )
             )
 
         return final_displacement_x, final_displacement_z

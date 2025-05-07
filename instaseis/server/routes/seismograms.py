@@ -7,6 +7,7 @@
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import concurrent.futures
 import inspect
 import io
@@ -687,7 +688,6 @@ class SeismogramsHandler(InstaseisTimeSeriesHandler):
         # Loop over each receiver, get the synthetics and stream it to the
         # user.
         for receiver in receivers:
-
             # Check if the connection is still open. The connection_closed
             # flag is set by the on_connection_close() method. This is
             # pretty manual right now. Maybe there is a better way? This

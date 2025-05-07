@@ -9,6 +9,7 @@ Mostly testing the various wrappers.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import numpy as np
 
 
@@ -86,7 +87,7 @@ def test_inside_element():
     zr = 1.1456
 
     # spheroidal
-    s0 = 2.0 / 2 ** 0.5
+    s0 = 2.0 / 2**0.5
     z0 = s0
     check_is_in(
         nodes=nodes,
@@ -99,13 +100,13 @@ def test_inside_element():
     )
     check_is_in(nodes=nodes, element_type=0, s=0.5, z=0.5, is_in_ref=False)
     check_is_in(
-        nodes=nodes, element_type=0, s=0.5 ** 0.5, z=0.5 ** 0.5, is_in_ref=True
+        nodes=nodes, element_type=0, s=0.5**0.5, z=0.5**0.5, is_in_ref=True
     )
     check_is_in(
         nodes=nodes,
         element_type=0,
-        s=3 * 0.5 ** 0.5,
-        z=3 * 0.5 ** 0.5,
+        s=3 * 0.5**0.5,
+        z=3 * 0.5**0.5,
         is_in_ref=True,
     )
     check_is_in(
@@ -130,13 +131,13 @@ def test_inside_element():
     )
     check_is_in(nodes=nodes, element_type=1, s=0.5, z=0.5, is_in_ref=True)
     check_is_in(
-        nodes=nodes, element_type=1, s=0.5 ** 0.5, z=0.5 ** 0.5, is_in_ref=True
+        nodes=nodes, element_type=1, s=0.5**0.5, z=0.5**0.5, is_in_ref=True
     )
     check_is_in(
         nodes=nodes,
         element_type=1,
-        s=3 * 0.5 ** 0.5,
-        z=3 * 0.5 ** 0.5,
+        s=3 * 0.5**0.5,
+        z=3 * 0.5**0.5,
         is_in_ref=False,
     )
     check_is_in(
@@ -163,13 +164,13 @@ def test_inside_element():
     )
     check_is_in(nodes=nodes, element_type=2, s=0.5, z=0.5, is_in_ref=True)
     check_is_in(
-        nodes=nodes, element_type=2, s=0.5 ** 0.5, z=0.5 ** 0.5, is_in_ref=True
+        nodes=nodes, element_type=2, s=0.5**0.5, z=0.5**0.5, is_in_ref=True
     )
     check_is_in(
         nodes=nodes,
         element_type=2,
-        s=3 * 0.5 ** 0.5,
-        z=3 * 0.5 ** 0.5,
+        s=3 * 0.5**0.5,
+        z=3 * 0.5**0.5,
         is_in_ref=True,
     )
     check_is_in(
@@ -196,13 +197,13 @@ def test_inside_element():
     )
     check_is_in(nodes=nodes, element_type=3, s=0.5, z=0.5, is_in_ref=False)
     check_is_in(
-        nodes=nodes, element_type=3, s=0.5 ** 0.5, z=0.5 ** 0.5, is_in_ref=True
+        nodes=nodes, element_type=3, s=0.5**0.5, z=0.5**0.5, is_in_ref=True
     )
     check_is_in(
         nodes=nodes,
         element_type=3,
-        s=3 * 0.5 ** 0.5,
-        z=3 * 0.5 ** 0.5,
+        s=3 * 0.5**0.5,
+        z=3 * 0.5**0.5,
         is_in_ref=False,
     )
     check_is_in(

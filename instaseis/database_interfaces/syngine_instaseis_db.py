@@ -9,6 +9,7 @@ Instaseis database class for remote access using the syngine service of IRIS.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import io
 import numpy as np
 import obspy
@@ -221,8 +222,7 @@ class SyngineInstaseisDB(BaseInstaseisDB):
             )
         if r.status_code == 400:  # pragma: no cover
             raise InstaseisError(
-                "Model '%s' not available on the syngine "
-                "service?" % self.model
+                "Model '%s' not available on the syngine service?" % self.model
             )
         elif r.status_code != 200:  # pragma: no cover
             raise InstaseisError(

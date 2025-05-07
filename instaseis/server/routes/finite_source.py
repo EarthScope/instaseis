@@ -7,6 +7,7 @@
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import concurrent.futures
 import io
 import math
@@ -152,9 +153,7 @@ def _parse_and_resample_finite_source(request, db_info, max_size):
     # Don't forward the exception message as it might be anything and could
     # thus compromise security.
     except Exception:
-        msg = (
-            "Could not parse the body contents. Incorrect USGS param " "file?"
-        )
+        msg = "Could not parse the body contents. Incorrect USGS param file?"
         return tornado.web.HTTPError(400, log_message=msg, reason=msg)
 
     if max_size is not None and finite_source.npointsources > max_size:
@@ -428,7 +427,6 @@ class FiniteSourceSeismogramsHandler(InstaseisTimeSeriesHandler):
         # Loop over each receiver, get the synthetics and stream it to the
         # user.
         for receiver in receivers:
-
             # Check if the connection is still open. The connection_closed
             # flag is set by the on_connection_close() method. This is
             # pretty manual right now. Maybe there is a better way? This

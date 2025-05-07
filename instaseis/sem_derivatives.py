@@ -11,6 +11,7 @@ AxiSEM kernel module.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import ctypes as C
 import numpy as np
 
@@ -21,7 +22,17 @@ lib = load_lib()
 
 
 def _strain_td(
-    u, G, GT, xi, eta, npol, nsamp, nodes, element_type, axial, fct  # NOQA
+    u,
+    G,
+    GT,
+    xi,
+    eta,
+    npol,
+    nsamp,
+    nodes,
+    element_type,
+    axial,
+    fct,  # NOQA
 ):
     strain_tensor = np.zeros(
         (nsamp, npol + 1, npol + 1, 6), np.float64, order="F"
@@ -29,7 +40,9 @@ def _strain_td(
     u = np.require(u, dtype=np.float64, requirements=["F_CONTIGUOUS"])
     G = np.require(G, dtype=np.float64, requirements=["F_CONTIGUOUS"])  # NOQA
     GT = np.require(
-        GT, dtype=np.float64, requirements=["F_CONTIGUOUS"]  # NOQA
+        GT,
+        dtype=np.float64,
+        requirements=["F_CONTIGUOUS"],  # NOQA
     )
     xi = np.require(xi, dtype=np.float64, requirements=["F_CONTIGUOUS"])
     eta = np.require(eta, dtype=np.float64, requirements=["F_CONTIGUOUS"])
@@ -53,7 +66,16 @@ def _strain_td(
 
 
 def strain_monopole_td(
-    u, G, GT, xi, eta, npol, nsamp, nodes, element_type, axial  # NOQA
+    u,
+    G,
+    GT,
+    xi,
+    eta,
+    npol,
+    nsamp,
+    nodes,
+    element_type,
+    axial,  # NOQA
 ):
     return _strain_td(
         u,
@@ -71,7 +93,16 @@ def strain_monopole_td(
 
 
 def strain_dipole_td(
-    u, G, GT, xi, eta, npol, nsamp, nodes, element_type, axial  # NOQA
+    u,
+    G,
+    GT,
+    xi,
+    eta,
+    npol,
+    nsamp,
+    nodes,
+    element_type,
+    axial,  # NOQA
 ):
     return _strain_td(
         u,
@@ -89,7 +120,16 @@ def strain_dipole_td(
 
 
 def strain_quadpole_td(
-    u, G, GT, xi, eta, npol, nsamp, nodes, element_type, axial  # NOQA
+    u,
+    G,
+    GT,
+    xi,
+    eta,
+    npol,
+    nsamp,
+    nodes,
+    element_type,
+    axial,  # NOQA
 ):  # pragma: no cover
     return _strain_td(
         u,

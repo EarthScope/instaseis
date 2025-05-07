@@ -9,6 +9,7 @@ Library loading helper.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import ctypes as C
 import glob
 import inspect
@@ -34,7 +35,7 @@ def load_lib():
         possible_files = glob.glob(os.path.join(LIB_DIR, "instaseis*.so"))
         if not possible_files:  # pragma: no cover
             raise ValueError(
-                "Could not find suitable instaseis shared " "library."
+                "Could not find suitable instaseis shared library."
             )
         filename = possible_files[0]
         lib = C.CDLL(filename)
@@ -85,7 +86,7 @@ def elliptic_to_geocentric_latitude(
     -44.80757678401642
     """
     _f = (axis_a - axis_b) / axis_a
-    e_2 = 2 * _f - _f ** 2
+    e_2 = 2 * _f - _f**2
 
     # Singularities close to the pole and the equator. Just return the value
     # in that case.
@@ -119,7 +120,7 @@ def geocentric_to_elliptic_latitude(
     -45.19242321598358
     """
     _f = (axis_a - axis_b) / axis_a
-    e_2 = 2 * _f - _f ** 2
+    e_2 = 2 * _f - _f**2
 
     # Singularities close to the pole and the equator. Just return the value
     # in that case.

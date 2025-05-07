@@ -10,6 +10,7 @@ Source and Receiver classes of Instaseis.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import collections
 import functools
 import io
@@ -79,7 +80,7 @@ def magnitude2moment(Mw):  # NOQA
     :return M0: seismic moment in Nm
     :type M0: float
     """
-    return 10.0 ** ((Mw / 2.0 * 3.0 + 9.1))
+    return 10.0 ** (Mw / 2.0 * 3.0 + 9.1)
 
 
 def fault_vectors_lmn(strike, dip, rake):
@@ -143,8 +144,8 @@ def strike_dip_rake_from_ln(l, n):  # NOQA
     :return (strike, dip, rake): strike, dip and rake
     :type (strike, dip, rake): tuple of floats
     """
-    l_norm = l / (l ** 2).sum()
-    n_norm = n / (n ** 2).sum()
+    l_norm = l / (l**2).sum()
+    n_norm = n / (n**2).sum()
 
     delta = np.arccos(n_norm[2])
     phi = np.arctan2(n_norm[0], n_norm[1])
@@ -212,13 +213,12 @@ class SourceOrReceiver(object):
 
         if not (-90 <= self.latitude <= 90):
             raise ValueError(
-                "Invalid latitude value. Latitude must be " "-90 <= x <= 90."
+                "Invalid latitude value. Latitude must be -90 <= x <= 90."
             )
 
         if not (-180 <= self.longitude <= 180.0):
             raise ValueError(
-                "Invalid longitude value. Longitude must be "
-                "-180 <= x <= 180."
+                "Invalid longitude value. Longitude must be -180 <= x <= 180."
             )
 
     def __eq__(self, other):
@@ -621,13 +621,13 @@ class Source(SourceOrReceiver, SourceTimeFunction):
         Scalar Moment M0 in Nm
         """
         return (
-            self.m_rr ** 2
-            + self.m_tt ** 2
-            + self.m_pp ** 2
-            + 2 * self.m_rt ** 2
-            + 2 * self.m_rp ** 2
-            + 2 * self.m_tp ** 2
-        ) ** 0.5 * 0.5 ** 0.5
+            self.m_rr**2
+            + self.m_tt**2
+            + self.m_pp**2
+            + 2 * self.m_rt**2
+            + 2 * self.m_rp**2
+            + 2 * self.m_tp**2
+        ) ** 0.5 * 0.5**0.5
 
     @property
     def moment_magnitude(self):
@@ -940,7 +940,7 @@ class Receiver(SourceOrReceiver):
         elif isinstance(filename_or_obj, obspy.Trace):
             if not hasattr(filename_or_obj.stats, "sac"):
                 raise ReceiverParseError(
-                    "ObsPy Trace must have an sac " "attribute."
+                    "ObsPy Trace must have an sac attribute."
                 )
             if (
                 "stla" not in filename_or_obj.stats.sac
@@ -1287,7 +1287,6 @@ class FiniteSource(object):
 
         # parse all segments
         for _ in range(nseg):
-
             # got to point source segment
             for line in fh:
                 line = line.decode()
@@ -1632,12 +1631,10 @@ class FiniteSource(object):
             )
 
         longitude = np.rad2deg(np.arctan2(y, x))
-        colatitude = np.rad2deg(
-            np.arccos(z / np.sqrt(x ** 2 + y ** 2 + z ** 2))
-        )
+        colatitude = np.rad2deg(np.arccos(z / np.sqrt(x**2 + y**2 + z**2)))
         latitude = 90.0 - colatitude
 
-        depth_in_m = planet_radius - (x ** 2 + y ** 2 + z ** 2) ** 0.5
+        depth_in_m = planet_radius - (x**2 + y**2 + z**2) ** 0.5
 
         finite_mij = rotations.rotate_symm_tensor_voigt_xyz_earth_to_xyz_src(
             finite_mij, np.deg2rad(longitude), np.deg2rad(colatitude)

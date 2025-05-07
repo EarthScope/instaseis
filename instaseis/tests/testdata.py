@@ -3,6 +3,7 @@
 Tests data either gained from an old DB implementation, AxiSEM, or to guard
 against regressions.
 """
+
 import numpy as np
 
 BWD_TEST_DATA = {

@@ -9,6 +9,7 @@ Base Instaseis Request handler currently only settings default headers.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 from abc import ABCMeta, abstractmethod
 import obspy
 import tornado
@@ -98,7 +99,7 @@ class InstaseisTimeSeriesHandler(InstaseisRequestHandler, metaclass=ABCMeta):
                         )
                     else:
                         msg = (
-                            "Parameter '%s' could not be converted to " "'%s'."
+                            "Parameter '%s' could not be converted to '%s'."
                         ) % (name, str(properties["type"].__name__))
                     raise tornado.web.HTTPError(
                         400, log_message=msg, reason=msg
@@ -124,8 +125,7 @@ class InstaseisTimeSeriesHandler(InstaseisRequestHandler, metaclass=ABCMeta):
 
             if not args.components:
                 msg = (
-                    "A request with no components will not return "
-                    "anything..."
+                    "A request with no components will not return anything..."
                 )
                 raise tornado.web.HTTPError(400, log_message=msg, reason=msg)
 

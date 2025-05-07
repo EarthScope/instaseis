@@ -9,6 +9,7 @@ Tests for the Instaseis server.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 import copy
 import io
 import json
@@ -381,7 +382,6 @@ def test_greens_function_retrieval(all_greens_clients):
         "instaseis.database_interfaces.base_instaseis_db"
         ".BaseInstaseisDB.get_greens_function"
     ) as p:
-
         p.side_effect = ValueError("random crash")
         request = fetch_sync(
             client, _assemble_url("greens_function", **params)
@@ -413,8 +413,7 @@ def test_greens_function_retrieval(all_greens_clients):
 
     assert request.code == 500
     assert request.reason == (
-        "Starttime more than one hour before the "
-        "starttime of the seismograms."
+        "Starttime more than one hour before the starttime of the seismograms."
     )
 
     params = copy.deepcopy(basic_parameters)
@@ -436,7 +435,7 @@ def test_greens_function_retrieval(all_greens_clients):
 
     assert request.code == 500
     assert request.reason.startswith(
-        "Endtime larger than the extracted " "endtime"
+        "Endtime larger than the extracted endtime"
     )
 
 
@@ -2673,7 +2672,7 @@ def test_coordinates_route_with_stations_coordinates_callback(
     request = fetch_sync(client, "/coordinates?network=IU")
     assert request.code == 400
     assert request.reason == (
-        "Parameters 'network' and 'station' must be " "given."
+        "Parameters 'network' and 'station' must be given."
     )
 
 
@@ -3928,8 +3927,7 @@ def test_unknown_parameter_raises(all_clients):
     request = fetch_sync(client, _assemble_url("seismograms_raw", **params))
     assert request.code == 400
     assert request.reason == (
-        "The following unknown parameters have been "
-        "passed: 'bogus', 'random'"
+        "The following unknown parameters have been passed: 'bogus', 'random'"
     )
 
     # Same with /seismograms route.
@@ -3950,8 +3948,7 @@ def test_unknown_parameter_raises(all_clients):
     request = fetch_sync(client, _assemble_url("seismograms", **params))
     assert request.code == 400
     assert request.reason == (
-        "The following unknown parameters have been "
-        "passed: 'bogus', 'random'"
+        "The following unknown parameters have been passed: 'bogus', 'random'"
     )
 
 
@@ -3984,7 +3981,7 @@ def test_passing_duplicate_parameter_raises(all_clients):
     request = fetch_sync(client, url)
     assert request.code == 400
     assert request.reason == (
-        "Duplicate parameters: 'mrt', " "'receiverlatitude'"
+        "Duplicate parameters: 'mrt', 'receiverlatitude'"
     )
 
     # Same with /seismograms route.
@@ -4037,7 +4034,7 @@ def test_passing_invalid_time_settings_raises(all_clients):
     request = fetch_sync(client, url)
     assert request.code == 400
     assert request.reason == (
-        "The `starttime` must be before the seismogram " "ends."
+        "The `starttime` must be before the seismogram ends."
     )
 
     p = copy.deepcopy(params)
@@ -4046,7 +4043,7 @@ def test_passing_invalid_time_settings_raises(all_clients):
     request = fetch_sync(client, url)
     assert request.code == 400
     assert request.reason == (
-        "The end time of the seismograms lies outside " "the allowed range."
+        "The end time of the seismograms lies outside the allowed range."
     )
 
     p = copy.deepcopy(params)
@@ -4683,8 +4680,7 @@ def test_ttimes_route(all_clients_ttimes_callback):
     )
     assert request.code == 400
     assert request.reason == (
-        "Failed to calculate travel time due to: No "
-        "layer contains this depth"
+        "Failed to calculate travel time due to: No layer contains this depth"
     )
 
     # No such phase at that distance.
@@ -5418,7 +5414,7 @@ def test_various_failure_conditions(all_clients_all_callbacks):
     request = fetch_sync(client, _assemble_url("seismograms", **params))
     assert request.code == 400
     assert request.reason == (
-        "Parameter 'sourceforce' must be formatted as: " "'Fr,Ft,Fp'"
+        "Parameter 'sourceforce' must be formatted as: 'Fr,Ft,Fp'"
     )
 
     # sourceforce has an invalid component.
@@ -5435,7 +5431,7 @@ def test_various_failure_conditions(all_clients_all_callbacks):
     request = fetch_sync(client, _assemble_url("seismograms", **params))
     assert request.code == 400
     assert request.reason == (
-        "Parameter 'sourceforce' must be formatted as: " "'Fr,Ft,Fp'"
+        "Parameter 'sourceforce' must be formatted as: 'Fr,Ft,Fp'"
     )
 
     # Seismic moment cannot be negative.
@@ -5508,7 +5504,7 @@ def test_various_failure_conditions(all_clients_all_callbacks):
         request = fetch_sync(client, _assemble_url("seismograms", **params))
         assert request.code == 400
         assert request.reason == (
-            "Receiver must be at the surface for " "reciprocal databases."
+            "Receiver must be at the surface for reciprocal databases."
         )
 
         # A too deep source depth raises.
@@ -6036,7 +6032,7 @@ def test_error_handling_custom_stf(all_clients):
     )
     assert request.code == 400
     assert request.reason == (
-        "The body of the POST request is not a valid " "JSON file."
+        "The body of the POST request is not a valid JSON file."
     )
 
     # Not a json file that's valid according to the schema.
@@ -6069,8 +6065,7 @@ def test_error_handling_custom_stf(all_clients):
     )
     assert request.code == 400
     assert request.reason == (
-        "Validation Error in JSON file: 'random' is not one of "
-        "['moment_rate']"
+        "Validation Error in JSON file: 'random' is not one of ['moment_rate']"
     )
 
     body = copy.deepcopy(valid_json)
@@ -6083,8 +6078,7 @@ def test_error_handling_custom_stf(all_clients):
     )
     assert request.code == 400
     assert request.reason == (
-        "Validation Error in JSON file: -0.1 is less than the minimum of "
-        "1e-05"
+        "Validation Error in JSON file: -0.1 is less than the minimum of 1e-05"
     )
 
     body = copy.deepcopy(valid_json)
@@ -6233,7 +6227,7 @@ def test_custom_stf(all_clients):
     )
     assert r.code == 400
     assert r.reason == (
-        "Parameter 'sourcewidth' is not allowed for POST " "requests."
+        "Parameter 'sourcewidth' is not allowed for POST requests."
     )
 
 

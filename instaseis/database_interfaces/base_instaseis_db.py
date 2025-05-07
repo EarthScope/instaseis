@@ -10,6 +10,7 @@ Abstract base class for all Instaseis database classes.
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
+
 from abc import ABCMeta, abstractmethod
 from distutils.version import LooseVersion
 import math
@@ -647,7 +648,7 @@ class BaseInstaseisDB(metaclass=ABCMeta):
 
         if not self.info.is_reciprocal:
             raise ValueError(
-                "forward DB cannot be used with " "get_greens_function()"
+                "forward DB cannot be used with get_greens_function()"
             )
 
         if not self.info.components == "vertical and horizontal":

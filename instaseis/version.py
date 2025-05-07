@@ -43,17 +43,20 @@ import warnings
 
 __all__ = ["get_git_version"]
 
-script_dir = os.path.abspath(os.path.dirname(inspect.getfile(
-                                             inspect.currentframe())))
+script_dir = os.path.abspath(
+    os.path.dirname(inspect.getfile(inspect.currentframe()))
+)
 ROOT = os.path.abspath(os.path.join(script_dir, os.pardir))
 VERSION_FILE = os.path.join(ROOT, "instaseis", "RELEASE-VERSION")
 
 
-def call_git_describe(abbrev=10, dirty=True,
-                      append_remote_tracking_branch=True):
+def call_git_describe(
+    abbrev=10, dirty=True, append_remote_tracking_branch=True
+):
     try:
-        p = check_output(['git', 'rev-parse', '--show-toplevel'],
-                         cwd=ROOT, stderr=STDOUT)
+        p = check_output(
+            ["git", "rev-parse", "--show-toplevel"], cwd=ROOT, stderr=STDOUT
+        )
         path = p.decode().strip()
     except (OSError, CalledProcessError):
         return None
@@ -61,13 +64,22 @@ def call_git_describe(abbrev=10, dirty=True,
     if os.path.normpath(path) != ROOT:
         return None
 
-    command = ['git', 'describe', '--abbrev=%d' % abbrev, '--always', '--tags']
+    command = ["git", "describe", "--abbrev=%d" % abbrev, "--always", "--tags"]
     if dirty:
         command.append("--dirty")
     try:
-        p = check_output(['git', 'describe', '--dirty', '--abbrev=%d' % abbrev,
-                          '--always', '--tags'],
-                         cwd=ROOT, stderr=STDOUT)
+        p = check_output(
+            [
+                "git",
+                "describe",
+                "--dirty",
+                "--abbrev=%d" % abbrev,
+                "--always",
+                "--tags",
+            ],
+            cwd=ROOT,
+            stderr=STDOUT,
+        )
         line = p.decode().strip()
     except (OSError, CalledProcessError):
         return None
@@ -76,20 +88,19 @@ def call_git_describe(abbrev=10, dirty=True,
     if append_remote_tracking_branch:
         try:
             # find out local alias of remote and name of remote tracking branch
-            p = check_output(['git', 'branch', '-vv'],
-                             cwd=ROOT, stderr=STDOUT)
-            remote_info = [line_.rstrip()
-                           for line_ in p.decode().splitlines()]
-            remote_info = [line_ for line_ in remote_info
-                           if line_.startswith('*')][0]
+            p = check_output(["git", "branch", "-vv"], cwd=ROOT, stderr=STDOUT)
+            remote_info = [line_.rstrip() for line_ in p.decode().splitlines()]
+            remote_info = [
+                line_ for line_ in remote_info if line_.startswith("*")
+            ][0]
             remote_info = re.sub(r".*? \[([^ :]*).*?\] .*", r"\1", remote_info)
             remote, branch = remote_info.split("/")
             # find out real name of remote
-            p = check_output(['git', 'remote', '-v'],
-                             cwd=ROOT, stderr=STDOUT)
+            p = check_output(["git", "remote", "-v"], cwd=ROOT, stderr=STDOUT)
             stdout = [line_.strip() for line_ in p.decode().splitlines()]
-            remote = [line_ for line_ in stdout
-                      if line_.startswith(remote)][0].split()[1]
+            remote = [line_ for line_ in stdout if line_.startswith(remote)][
+                0
+            ].split()[1]
             if remote.startswith("git@github.com:"):
                 remote = re.sub(r"git@github.com:(.*?)/.*", r"\1", remote)
             elif remote.startswith("https://github.com/"):
@@ -99,8 +110,9 @@ def call_git_describe(abbrev=10, dirty=True,
             else:
                 remote = None
             if remote is not None:
-                remote_tracking_branch = re.sub(r'[^A-Za-z0-9._-]', r'_',
-                                                '%s-%s' % (remote, branch))
+                remote_tracking_branch = re.sub(
+                    r"[^A-Za-z0-9._-]", r"_", "%s-%s" % (remote, branch)
+                )
         except (IndexError, OSError, ValueError, CalledProcessError):
             pass
 
@@ -109,13 +121,13 @@ def call_git_describe(abbrev=10, dirty=True,
     if "-" not in line and "." not in line:
         version = "0.0.0.dev+0.g%s" % line
     else:
-        parts = line.split('-', 1)
+        parts = line.split("-", 1)
         version = parts[0]
         try:
-            modifier = '+' if '.post' in version else '.post+'
+            modifier = "+" if ".post" in version else ".post+"
             version += modifier + parts[1]
             if remote_tracking_branch is not None:
-                version += '.' + remote_tracking_branch
+                version += "." + remote_tracking_branch
         # IndexError means we are at a release version tag cleanly,
         # add nothing additional
         except IndexError:
@@ -134,7 +146,7 @@ def read_release_version():
 
 def write_release_version(version):
     with io.open(VERSION_FILE, "wb") as fh:
-        fh.write(("%s\n" % version).encode('ascii', 'strict'))
+        fh.write(("%s\n" % version).encode("ascii", "strict"))
 
 
 def get_git_version(abbrev=10, dirty=True, append_remote_tracking_branch=True):
@@ -143,8 +155,10 @@ def get_git_version(abbrev=10, dirty=True, append_remote_tracking_branch=True):
 
     # First try to get the current version using “git describe”.
     version = call_git_describe(
-        abbrev, dirty=dirty,
-        append_remote_tracking_branch=append_remote_tracking_branch)
+        abbrev,
+        dirty=dirty,
+        append_remote_tracking_branch=append_remote_tracking_branch,
+    )
     # If that doesn't work, fall back on the value that's in
     # RELEASE-VERSION.
     if version is None:
@@ -152,12 +166,14 @@ def get_git_version(abbrev=10, dirty=True, append_remote_tracking_branch=True):
 
     # If we still don't have anything, that's an error.
     if version is None:
-        warnings.warn("Instaseis could not determine its version number. Make "
-                      "sure it is properly installed. This for example "
-                      "happens when installing from a zip archive "
-                      "of the Instaseis repository which is not a supported way "
-                      "of installing Instaseis.")
-        return '0.0.0+archive'
+        warnings.warn(
+            "Instaseis could not determine its version number. Make "
+            "sure it is properly installed. This for example "
+            "happens when installing from a zip archive "
+            "of the Instaseis repository which is not a supported way "
+            "of installing Instaseis."
+        )
+        return "0.0.0+archive"
 
     # pip uses its normalized version number (strict PEP440) instead of our
     # original version number, so we bow to pip and use the normalized version
@@ -178,10 +194,10 @@ def _normalize_version(version):
     Normalize version number string to adhere with PEP440 strictly.
     """
     pattern = (
-        r'^[0-9]+?\.[0-9]+?\.[0-9]+?'
-        r'((a|b|rc)[0-9]+?)?'
-        r'(\.post[0-9]+?)?'
-        r'(\.dev[0-9]+?)?$'
+        r"^[0-9]+?\.[0-9]+?\.[0-9]+?"
+        r"((a|b|rc)[0-9]+?)?"
+        r"(\.post[0-9]+?)?"
+        r"(\.dev[0-9]+?)?$"
     )
     # we have a clean release version or another clean version
     # according to PEP 440
@@ -190,19 +206,19 @@ def _normalize_version(version):
     # we have an old-style version (i.e. a git describe string), prepare it for
     # the rest of clean up, i.e. put the '.post+' as separator for the local
     # version number part
-    elif '.post' in version:
-        version = re.sub(r'-', '+', version, count=1)
-    elif re.match(r'^[0-9]+?\.[0-9]+?\.[0-9]+?-[0-9]+?-g[0-9a-z]+?$', version):
-        version = re.sub(r'-', '.post+', version, count=1)
+    elif ".post" in version:
+        version = re.sub(r"-", "+", version, count=1)
+    elif re.match(r"^[0-9]+?\.[0-9]+?\.[0-9]+?-[0-9]+?-g[0-9a-z]+?$", version):
+        version = re.sub(r"-", ".post+", version, count=1)
     # only adapt local version part right
-    version = re.match(r'(.*?\+)(.*)', version)
+    version = re.match(r"(.*?\+)(.*)", version)
     # no upper case letters
     local_version = version.group(2).lower()
     # only alphanumeric and "." in local part
-    local_version = re.sub(r'[^A-Za-z0-9.]', r'.', local_version)
+    local_version = re.sub(r"[^A-Za-z0-9.]", r".", local_version)
     version = version.group(1) + local_version
     # make sure there's a "0" after ".post"
-    version = re.sub(r'\.post\+', r'.post0+', version)
+    version = re.sub(r"\.post\+", r".post0+", version)
     return version
 
 
