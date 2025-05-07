@@ -88,21 +88,6 @@ def get_package_data():
     return filenames
 
 
-def _compile(self, obj, src, ext, cc_args, extra_postargs, pp_opts):
-    compiler_so = self.compiler_so
-    if ext == ".f90":
-        if sys.platform == "darwin" or sys.platform == "linux2":
-            compiler_so = ["gfortran"]
-            cc_args = ["-O", "-fPIC", "-c", "-ffree-form"]
-    try:
-        self.spawn(compiler_so + cc_args + [src, "-o", obj] + extra_postargs)
-    except DistutilsExecError as msg:
-        raise CompileError(msg)
-
-
-UnixCCompiler._compile = _compile
-
-
 # Hack to prevent build_ext from trying to append "init" to the export symbols.
 class finallist(list):
     def append(self, object):
@@ -174,10 +159,48 @@ EXTRAS_REQUIRE = {
     ]
 }
 
-# Add mock for Python 2.x. Starting with Python 3 it is part of the standard
-# library.
-if sys.version_info[0] == 2:
-    INSTALL_REQUIRES.append("mock")
+from setuptools.command.build_ext import build_ext
+
+class FortranBuildExt(build_ext):
+    """Custom build extension that enforces the correct order for Fortran modules."""
+    
+    def build_extensions(self):
+        # Disable parallel builds to ensure correct module compilation order
+        self.parallel = None
+        super().build_extensions()
+    
+    def build_extension(self, ext):
+        # Check if this extension has Fortran files
+        fortran_sources = [s for s in ext.sources if s.endswith('.f90')]
+        if fortran_sources:
+            # Create a temporary directory for module files
+            module_dir = os.path.join(self.build_temp, "fortran_modules")
+            os.makedirs(module_dir, exist_ok=True)
+            
+            # Compile each Fortran file in sequence
+            objects = []
+            for src_file in fortran_sources:
+                obj_file = os.path.join(
+                    module_dir, 
+                    os.path.basename(src_file).replace('.f90', '.o')
+                )
+                
+                # Compile with gfortran
+                cmd = [
+                    "gfortran", "-O", "-fPIC", "-c", "-ffree-form",
+                    f"-J{module_dir}", f"-I{module_dir}",
+                    src_file, "-o", obj_file
+                ]
+                self.spawn(cmd)
+                objects.append(obj_file)
+            
+            # Set compiled objects and remove Fortran files from sources
+            ext.extra_objects = objects
+            ext.sources = [s for s in ext.sources if not s.endswith('.f90')]
+        
+        # Continue with standard build process
+        super().build_extension(ext)
+
 
 setup_config = dict(
     name="instaseis",
@@ -200,6 +223,7 @@ setup_config = dict(
     extras_require=EXTRAS_REQUIRE,
     ext_package="instaseis.lib",
     ext_modules=[lib],
+    cmdclass={"build_ext": FortranBuildExt},
     # this is needed for "pip install instaseis==dev"
     download_url=(
         "https://github.com/krischer/instaseis/zipball/master"
