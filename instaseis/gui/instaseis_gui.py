@@ -10,20 +10,22 @@ Graphical user interface for Instaseis.
     (http://www.gnu.org/copyleft/lgpl.html)
 """
 
-from PySide2 import QtGui, QtCore
-from PySide2.QtWidgets import QApplication
+from PySide6 import QtGui, QtCore
+from PySide6.QtWidgets import QApplication, QMainWindow
 import pyqtgraph as pg
 
 from glob import iglob
-import imp
 import inspect
-from mpl_toolkits.basemap import Basemap
+
+# from mpl_toolkits.basemap import Basemap
 import numpy as np
 from obspy.imaging.mopad_wrapper import beach
 from obspy import geodetics
 from obspy.taup import TauPyModel
 import os
 import sys
+
+from . import qt_window
 
 from instaseis import open_db, Source, Receiver, FiniteSource
 
@@ -59,9 +61,9 @@ def compile_and_import_ui_files():
         if not os.path.exists(py_ui_file) or (
             os.path.getmtime(ui_file) >= os.path.getmtime(py_ui_file)
         ):
-            # No more function in pyside2 so we'll just call the built in tool
+            # No more function in PySide6 so we'll just call the built in tool
             # directly.
-            import PySide2 as ref_mod
+            import PySide6 as ref_mod
 
             pyside_dir = os.path.dirname(ref_mod.__file__)
 
@@ -82,9 +84,9 @@ def compile_and_import_ui_files():
             print(e.message)
 
 
-class Window(QtGui.QMainWindow):
+class Window(QMainWindow):
     def __init__(self):
-        QtGui.QMainWindow.__init__(self)
+        QMainWindow.__init__(self)
         # Injected by the compile_and_import_ui_files() function.
         self.ui = qt_window.Ui_MainWindow()  # NOQA
         self.ui.setupUi(self)
@@ -232,6 +234,7 @@ class Window(QtGui.QMainWindow):
         fig.canvas.draw()
 
     def plot_map(self):
+        return
         self.mpl_map_figure = self.ui.map_fig.fig
 
         # if hasattr(self, 'mpl_map_ax'):
@@ -244,9 +247,9 @@ class Window(QtGui.QMainWindow):
             "Left click: Set Receiver; Right click: Set Source"
         )
 
-        self.map = Basemap(
-            projection="moll", lon_0=0, resolution="c", ax=self.mpl_map_ax
-        )
+        # self.map = Basemap(
+        #     projection="moll", lon_0=0, resolution="c", ax=self.mpl_map_ax
+        # )
 
         self.map.drawmapboundary(fill_color="#cccccc")
 
@@ -925,15 +928,21 @@ class Window(QtGui.QMainWindow):
 
 
 def launch():
+    app = QApplication([])
+
+    window = Window()
+    window.show()
+    sys.exit(app.exec_())
+
     # Automatically compile all ui files if they have been changed.
-    compile_and_import_ui_files()
+    # compile_and_import_ui_files()
 
     # Launch and open the window.
-    app = QApplication(sys.argv)
-    window = Window()
+    # pp = QApplication(sys.argv)
+    # indow = Window()
 
     # Show and bring window to foreground.
-    window.show()
-    app.installEventFilter(window)
-    window.raise_()
-    os._exit(app.exec_())
+    # indow.show()
+    # pp.installEventFilter(window)
+    # indow.raise_()
+    # s._exit(app.exec_())

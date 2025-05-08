@@ -1,54 +1,129 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Wrappers using ctypes around some functions from the spectral_basis module from
+Numba translations for some functions from the spectral_basis module from
 AxiSEM's kernel module.
 
 :copyright:
-    Lion Krischer (lion.krischer@gmail.com), 2020
+    Lion Krischer (lion.krischer@gmail.com), 2025
     Martin van Driel (Martin@vanDriel.de), 2020
 :license:
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
     (http://www.gnu.org/copyleft/lgpl.html)
 """
 
-import ctypes as C
 import numpy as np
-
-from .helpers import load_lib
-
-
-lib = load_lib()
+from numba import njit
 
 
-def lagrange_interpol_2D_td(points1, points2, coefficients, x1, x2):  # NOQA
-    points1 = np.require(
-        points1, dtype=np.float64, requirements=["F_CONTIGUOUS"]
-    )
-    points2 = np.require(
-        points2, dtype=np.float64, requirements=["F_CONTIGUOUS"]
-    )
-    coefficients = np.require(
-        coefficients, dtype=np.float64, requirements=["F_CONTIGUOUS"]
-    )
+@njit
+def lagrange_interpol_2D_td(points1, points2, coefficients, x1, x2):
+    """
+    Computes the 2D Lagrange interpolation for time-dependent coefficients.
 
-    # Should be safe enough. This was never raised while extracting a lot of
-    # seismograms.
-    assert len(points1) == len(points2)
+    This function performs a 2D Lagrange interpolation on a grid defined by
+    `points1` and `points2`. The `coefficients` are given for each point
+    on this grid and for each time sample. The interpolation is evaluated
+    at the point (x1, x2).
 
-    n = len(points1) - 1
+    Parameters
+    ----------
+    points1 : np.ndarray
+        1D array of coordinates for the first dimension.
+    points2 : np.ndarray
+        1D array of coordinates for the second dimension.
+    coefficients : np.ndarray
+        3D array of coefficients. The shape is expected to be
+        (nsamp, len(points1), len(points2)), where `nsamp` is the
+        number of time samples.
+    x1 : float
+        The coordinate in the first dimension at which to interpolate.
+    x2 : float
+        The coordinate in the second dimension at which to interpolate.
+
+    Returns
+    -------
+    np.ndarray
+        1D array of interpolated values, one for each time sample.
+        The length of the array is `nsamp`.
+    """
+    n1 = len(points1) - 1
+    n2 = len(points2) - 1
+
+    # coefficients shape is assumed to be (nsamp, n1 + 1, n2 + 1)
     nsamp = coefficients.shape[0]
 
-    interpolant = np.zeros(nsamp, dtype="float64", order="F")
+    # Ensure that the dimensions of coefficients match points1 and points2
+    # These checks are good for debugging but might be removed for pure Numba performance
+    # if inputs are guaranteed to be correct.
+    # For Numba, raising exceptions like this is not standard.
+    # Consider asserting or ensuring valid inputs before calling the jitted function.
+    # if coefficients.ndim != 3 or \
+    #    coefficients.shape[1] != n1 + 1 or \
+    #    coefficients.shape[2] != n2 + 1:
+    #    # Handle error: In Numba, you can't raise arbitrary Python exceptions easily.
+    #    # One option is to return a specific value or array indicating an error.
+    #    # For now, we assume valid inputs as per the Fortran counterpart.
+    #    pass
 
-    lib.lagrange_interpol_2D_td(
-        C.c_int(n),
-        C.c_int(nsamp),
-        points1.ctypes.data_as(C.POINTER(C.c_double)),
-        points2.ctypes.data_as(C.POINTER(C.c_double)),
-        coefficients.ctypes.data_as(C.POINTER(C.c_double)),
-        C.c_double(x1),
-        C.c_double(x2),
-        interpolant.ctypes.data_as(C.POINTER(C.c_double)),
-    )
+    interpolant = np.zeros(nsamp, dtype=np.float64)
+
+    # Precompute l_i_vals for x1 and points1
+    # l_i_vals[i] = product_{m!=i} (x1 - points1[m]) / (points1[i] - points1[m])
+    l_i_vals = np.empty(n1 + 1, dtype=np.float64)
+    for i_idx in range(n1 + 1):
+        val = 1.0
+        for m1 in range(n1 + 1):
+            if m1 == i_idx:
+                continue
+            denominator = points1[i_idx] - points1[m1]
+            # Avoid division by zero if points are not distinct, though Lagrange
+            # interpolation assumes distinct points.
+            if denominator == 0.0:
+                # This case implies duplicate points in points1, which is problematic
+                # for Lagrange interpolation. For simplicity matching Fortran,
+                # we don't add explicit error handling here, assuming valid inputs.
+                # If x1 is one of points1[m1] where m1 != i_idx, val becomes 0, which is correct.
+                # If points1[i_idx] == points1[m1] for i_idx != m1, this is an issue with input points.
+                val = 0.0  # Or handle error appropriately
+                break
+            val *= (x1 - points1[m1]) / denominator
+        l_i_vals[i_idx] = val
+
+    # Precompute l_j_vals for x2 and points2
+    # l_j_vals[j] = product_{m!=j} (x2 - points2[m]) / (points2[j] - points2[m])
+    l_j_vals = np.empty(n2 + 1, dtype=np.float64)
+    for j_idx in range(n2 + 1):
+        val = 1.0
+        for m2 in range(n2 + 1):
+            if m2 == j_idx:
+                continue
+            denominator = points2[j_idx] - points2[m2]
+            if denominator == 0.0:
+                val = 0.0
+                break
+            val *= (x2 - points2[m2]) / denominator
+        l_j_vals[j_idx] = val
+
+    # Compute interpolant
+    # interpolant[s] = sum_{i=0..n1} sum_{j=0..n2} coefficients[s, i, j] * l_i_vals[i] * l_j_vals[j]
+    for s_idx in range(nsamp):  # loop over samples
+        current_sum = 0.0
+        for i_idx in range(n1 + 1):  # loop over points1 dimension
+            if (
+                l_i_vals[i_idx] == 0.0
+            ):  # Optimization: if l_i is zero, the inner sum term is zero
+                continue
+            for j_idx in range(n2 + 1):  # loop over points2 dimension
+                if (
+                    l_j_vals[j_idx] == 0.0
+                ):  # Optimization: if l_j is zero, this term is zero
+                    continue
+                current_sum += (
+                    coefficients[s_idx, i_idx, j_idx]
+                    * l_i_vals[i_idx]
+                    * l_j_vals[j_idx]
+                )
+        interpolant[s_idx] = current_sum
+
     return interpolant

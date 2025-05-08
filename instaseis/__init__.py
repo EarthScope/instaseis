@@ -1,9 +1,8 @@
 #!/usr/bin/env python
+from importlib.metadata import version as _get_version
 import re
-import warnings
 
-from .version import get_git_version
-
+__version__ = _get_version("instaseis")
 
 class InstaseisError(Exception):
     pass
@@ -91,17 +90,6 @@ def open_db(path, *args, **kwargs):
         from .database_interfaces import find_and_open_files
 
         return find_and_open_files(path=path, *args, **kwargs)
-
-
-__version__ = get_git_version()
-
-
-if __version__.startswith("0.0.0-tar/zipball"):  # pragma: no cover
-    warnings.warn(
-        "Please don't install from a tarball. Use the proper pypi "
-        "release or install from git.",
-        UserWarning,
-    )
 
 
 from .source import Source, Receiver, ForceSource, FiniteSource  # NoQa

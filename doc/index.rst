@@ -220,7 +220,7 @@ To run the tests, please also install:
 
 The optional graphical user interface furthermore requires
 
-* ``PySide2``
+* ``PySide6``
 * ``pyqtgraph`` (Must at least be version 0.11 - at the time of writing this means installing the dev version with ``pip install https://github.com/pyqtgraph/pyqtgraph/archive/develop.zip``)
 * ``matplotlib``
 * ``basemap``

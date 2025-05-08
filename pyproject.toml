@@ -1,3 +1,54 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# Dyanmic 
+dynamic = ["version"]
+name = "instaseis"
+authors = [
+    { name = "Lion Krischer", email = "lion.krischer@gmail.com" },
+    { name = "Martin van Driel" },
+    { name = "Simon Staehler" }
+    ]
+description = "Instaseis - Instant global seismological waveforms"
+readme = "Readme.md"
+requires-python = ">=3.11.*"
+license = "LGPL-3.0-only for non-commercial/academic use"
+license-files = ["LICENSE.txt"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "h5py",
+    "numpy",
+    "obspy >= 1.4",
+    "tornado>=6.0.0",
+    "requests",
+    "geographiclib",
+    "jsonschema >= 2.4.0",
+]
+[project.optional-dependencies]
+gui = ["PySide6"]
+tests = [
+  "click",
+  "netCDF4",
+  "pytest-xdist",
+  "flake8>=3",
+  "pytest>=5.0",
+  "responses",
+]
+
+
+[project.urls]
+"Homepage" = "https://instaseis.net"
+
 [tool.black]
 line-length = 79
 target-version = ['py37']
@@ -5,3 +56,6 @@ target-version = ['py37']
 [tool.ruff]
 line-length = 79
 target-version = "py311"
+
+# can be empty if no extra settings are needed, presence enables setuptools-scm.
+[tool.setuptools_scm]
