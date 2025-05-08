@@ -381,7 +381,11 @@ def _add_callback(client):
 
         r = client.io_loop.run_sync(f)
 
-        return (r.code, r.headers, r.body)
+        # Newer versions of requests/urllib3 require this.
+        headers = dict(r.headers)
+        headers["Content-Length"] = str(len(r.body))
+
+        return (r.code, headers, r.body)
 
     pattern = re.compile(r"http://localhost.*")
     responses.add_callback(

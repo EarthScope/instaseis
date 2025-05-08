@@ -4,6 +4,7 @@ import re
 
 __version__ = _get_version("instaseis")
 
+
 class InstaseisError(Exception):
     pass
 

@@ -491,7 +491,9 @@ def test_more_complex_queries(reciprocal_clients_all_callbacks, usgs_param):
     assert st[0].stats.starttime + 10 == st_2[0].stats.starttime
 
     # The rest of data should still be identical.
-    np.testing.assert_allclose(st.slice(starttime=10)[0].data, st_2[0].data)
+    np.testing.assert_allclose(
+        st.slice(starttime=st[0].stats.starttime + 10)[0].data, st_2[0].data
+    )
 
     # Try with the endtime.
     params = copy.deepcopy(basic_parameters)

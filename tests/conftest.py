@@ -10,7 +10,7 @@ import pytest
 import instaseis
 
 
-TEST_DATA = os.path.join(os.path.dirname(__file__), "tests", "data")
+TEST_DATA = os.path.join(os.path.dirname(__file__), "data")
 
 
 @pytest.fixture(autouse=True)
