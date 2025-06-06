@@ -12,11 +12,13 @@ AxiSEM's kernel module.
     (http://www.gnu.org/copyleft/lgpl.html)
 """
 
+import instaseis
+
 import numpy as np
 from numba import njit
 
 
-@njit
+@njit(cache=instaseis._use_numba_cache)
 def lagrange_interpol_2D_td(points1, points2, coefficients, x1, x2):
     """
     Computes the 2D Lagrange interpolation for time-dependent coefficients.

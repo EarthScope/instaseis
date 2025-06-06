@@ -10,7 +10,7 @@ Graphical user interface for Instaseis.
     (http://www.gnu.org/copyleft/lgpl.html)
 """
 
-from PySide6 import QtGui, QtCore
+from PySide6 import QtGui, QtCore, QtWidgets
 from PySide6.QtWidgets import QApplication, QMainWindow
 import pyqtgraph as pg
 
@@ -587,7 +587,7 @@ class Window(QMainWindow):
     def on_select_folder_button_released(self):
         pwd = os.getcwd()
         self.folder = str(
-            QtGui.QFileDialog.getExistingDirectory(
+            QtWidgets.QFileDialog.getExistingDirectory(
                 self, "Choose Directory", pwd
             )
         )

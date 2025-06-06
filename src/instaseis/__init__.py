@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 from importlib.metadata import version as _get_version
+import os
 import re
 
 __version__ = _get_version("instaseis")
+
+# Optionally disable the numba cache for problematic systems.
+_use_numba_cache = os.environ.get(
+    "INSTASEIS_DISABLE_NUMBA_CACHE", "0"
+).lower() not in ["1", "true", "t", "yes", "y"]
 
 
 class InstaseisError(Exception):

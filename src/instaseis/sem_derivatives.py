@@ -13,6 +13,8 @@ Wrappers using Numba around functions for computing strain tensors.
 
 import numpy as np
 from numba import njit
+
+import instaseis
 from instaseis.finite_elem_mapping import (
     mapping_subpar,
     mapping_spheroid,
@@ -25,7 +27,7 @@ from instaseis.finite_elem_mapping import (
 )
 
 
-@njit
+@njit(cache=instaseis._use_numba_cache)
 def _mapping_dispatch(xi_val, eta_val, nodes, element_type):
     if element_type == 0:  # subpar
         return mapping_subpar(xi_val, eta_val, nodes)
@@ -39,7 +41,7 @@ def _mapping_dispatch(xi_val, eta_val, nodes, element_type):
         return np.array([0.0, 0.0])
 
 
-@njit
+@njit(cache=instaseis._use_numba_cache)
 def _inv_jacobian_dispatch(xi_val, eta_val, nodes, element_type):
     if element_type == 0:  # subpar
         return inv_jacobian_subpar(xi_val, eta_val, nodes)
@@ -53,7 +55,7 @@ def _inv_jacobian_dispatch(xi_val, eta_val, nodes, element_type):
         return np.eye(2)
 
 
-@njit
+@njit(cache=instaseis._use_numba_cache)
 def mxm_atd(a, b):
     nsamp = a.shape[0]
     N = a.shape[1]
@@ -70,7 +72,7 @@ def mxm_atd(a, b):
     return result
 
 
-@njit
+@njit(cache=instaseis._use_numba_cache)
 def mxm_btd(a, b):
     N = a.shape[0]
     M = a.shape[1]
@@ -87,7 +89,7 @@ def mxm_btd(a, b):
     return result
 
 
-@njit
+@njit(cache=instaseis._use_numba_cache)
 def mxm_ipol0_atd(a, b):
     nsamp = a.shape[0]
     M = a.shape[2]
@@ -103,7 +105,7 @@ def mxm_ipol0_atd(a, b):
     return result
 
 
-@njit
+@njit(cache=instaseis._use_numba_cache)
 def mxm_ipol0_btd(a, b):
     M = a.shape[1]
     nsamp = b.shape[0]
@@ -119,7 +121,7 @@ def mxm_ipol0_btd(a, b):
     return result
 
 
-@njit
+@njit(cache=instaseis._use_numba_cache)
 def dsdf_axis_td(
     f, G_mat, GT_mat, xi_coords, eta_coords, npol, nsamp, nodes, element_type
 ):
@@ -144,7 +146,7 @@ def dsdf_axis_td(
     return dsdf_result
 
 
-@njit
+@njit(cache=instaseis._use_numba_cache)
 def axisym_gradient_td(
     u, G_mat, GT_mat, xi_coords, eta_coords, npol, nsamp, nodes, element_type
 ):
@@ -177,7 +179,7 @@ def axisym_gradient_td(
     return grad
 
 
-@njit
+@njit(cache=instaseis._use_numba_cache)
 def f_over_s_td(
     f_val,
     G_mat,
@@ -232,7 +234,7 @@ def f_over_s_td(
     return f_over_s
 
 
-@njit
+@njit(cache=instaseis._use_numba_cache)
 def strain_monopole_td(
     u, G, GT, xi, eta, npol, nsamp, nodes, element_type, axial
 ):
@@ -258,7 +260,7 @@ def strain_monopole_td(
     return strain_tensor
 
 
-@njit
+@njit(cache=instaseis._use_numba_cache)
 def strain_dipole_td(
     u, G, GT, xi, eta, npol, nsamp, nodes, element_type, axial
 ):
@@ -324,7 +326,7 @@ def strain_dipole_td(
     return strain_tensor
 
 
-@njit
+@njit(cache=instaseis._use_numba_cache)
 def strain_quadpole_td(
     u, G, GT, xi, eta, npol, nsamp, nodes, element_type, axial
 ):
