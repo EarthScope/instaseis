@@ -3,7 +3,7 @@ requires = ["setuptools>=64", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
-# Dyanmic 
+# Dyanmic
 dynamic = ["version"]
 name = "instaseis"
 authors = [
@@ -33,6 +33,7 @@ dependencies = [
     "requests",
     "geographiclib",
     "jsonschema >= 2.4.0",
+    "numba"
 ]
 [project.optional-dependencies]
 gui = ["PySide6"]

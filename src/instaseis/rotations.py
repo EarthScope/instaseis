@@ -71,8 +71,8 @@ def rotate_symm_tensor_voigt_xyz_earth_to_xyz_src(mt, phi, theta):
     # This double matrix product involves number that might differ by 20
     # orders of magnitudes which makes it numerically tricky. Thus we employ
     # quad precision numbers to make it a bit more stable and reproducable.
-    R = np.require(R, dtype=np.float128)  # NOQA
-    A = np.require(A, dtype=np.float128)  # NOQA
+    R = np.require(R, dtype=np.float64)  # NOQA
+    A = np.require(A, dtype=np.float64)  # NOQA
 
     B = np.dot(np.dot(R.T, A), R)  # NOQA
 
