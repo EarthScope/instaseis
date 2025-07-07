@@ -12,7 +12,6 @@ Abstract base class for all Instaseis database classes.
 """
 
 from abc import ABCMeta, abstractmethod
-from distutils.version import LooseVersion
 import math
 import warnings
 
