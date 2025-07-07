@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Launch Instaseis server.
+"""Launch Instaseis server.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020

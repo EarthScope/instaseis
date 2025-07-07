@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Tests for the syngine client. These tests might have to be adapted if the
+"""Tests for the syngine client. These tests might have to be adapted if the
 service changes.
 
 :copyright:
@@ -29,9 +28,7 @@ def syngine_client():
 
 
 def test_info(syngine_client):
-    """
-    Make sure the /info route is similar enough.
-    """
+    """Make sure the /info route is similar enough."""
     # Syngine and local database.
     s_db = syngine_client
     l_db = instaseis.open_db(db_path)
@@ -50,8 +47,7 @@ def test_info(syngine_client):
 
 
 def _compare_streams(s_db, l_db, kwargs):
-    """
-    Helper function comparing streams extracted from syngine and remote
+    """Helper function comparing streams extracted from syngine and remote
     instaseis databases.
     """
     s_st = s_db.get_seismograms(**kwargs)
@@ -70,9 +66,7 @@ def _compare_streams(s_db, l_db, kwargs):
 
 
 def test_seismogram_extraction(syngine_client):
-    """
-    Test the seismogram extraction from local and syngine databases.
-    """
+    """Test the seismogram extraction from local and syngine databases."""
     # syngine and local database.
     s_db = syngine_client
     l_db = instaseis.open_db(db_path)

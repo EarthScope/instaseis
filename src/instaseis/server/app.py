@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Server offering a REST API for Instaseis.
+"""Server offering a REST API for Instaseis.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
@@ -35,8 +34,7 @@ tornado.web.GZipContentEncoding.CONTENT_TYPES.add("application/vnd.geo+json")
 
 
 def get_application():
-    """
-    Return the tornado application.
+    """Return the tornado application.
 
     This is a separate function to be able to get the same application
     objects for the tests.
@@ -68,8 +66,7 @@ def launch_io_loop(
     event_info_callback=None,
     travel_time_callback=None,
 ):  # pragma: no cover
-    """
-    Launch the instaseis server.
+    """Launch the instaseis server.
 
     :param db_path: Path to the database on disc.
     :param port: The desired port of the server.

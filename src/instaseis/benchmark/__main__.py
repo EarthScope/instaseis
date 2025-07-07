@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Benchmarks for Instaseis.
+"""Benchmarks for Instaseis.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020

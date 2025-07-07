@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Numba translations for some functions from the finite_elem_mapping module from
+"""Numba translations for some functions from the finite_elem_mapping module from
 AxiSEM's kernel module.
 
 :copyright:
@@ -19,8 +18,7 @@ import instaseis
 def inside_element(
     s: float, z: float, nodes: np.ndarray, element_type: int, tolerance: float
 ) -> tuple[bool, float, float]:
-    """
-    Tests whether a point described by global coordinates s,z is inside an element
+    """Tests whether a point described by global coordinates s,z is inside an element
     and returns reference coordinates xi and eta.
 
     :param s: Global s-coordinate of the point.
@@ -71,8 +69,7 @@ def inside_element(
 # Helper Numba functions
 @njit(cache=instaseis._use_numba_cache)
 def compute_theta_r(nodes: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Computes polar coordinates (theta, r) for each node.
+    """Computes polar coordinates (theta, r) for each node.
 
     Node numbering of the elements is:
     4 - - - - - - - 3
@@ -113,8 +110,7 @@ def compute_theta_r(nodes: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
 @njit(cache=instaseis._use_numba_cache)
 def shp4(xi: float, eta: float) -> np.ndarray:
-    """
-    Computes the linear shape functions for a 4-node quadrilateral element
+    """Computes the linear shape functions for a 4-node quadrilateral element
     at a given point (xi, eta) in the reference domain.
 
     :param xi: Reference xi-coordinate (-1 to 1).
@@ -135,8 +131,7 @@ def shp4(xi: float, eta: float) -> np.ndarray:
 
 @njit(cache=instaseis._use_numba_cache)
 def shp4der(xi: float, eta: float) -> np.ndarray:
-    """
-    Computes the derivatives of the linear shape functions for a 4-node
+    """Computes the derivatives of the linear shape functions for a 4-node
     quadrilateral element with respect to xi and eta at a given point (xi, eta)
     in the reference domain.
 
@@ -169,8 +164,7 @@ def shp4der(xi: float, eta: float) -> np.ndarray:
 # Subpar Numba functions
 @njit(cache=instaseis._use_numba_cache)
 def mapping_subpar(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
-    """
-    Computes the physical coordinates (s, z) for a point (xi, eta)
+    """Computes the physical coordinates (s, z) for a point (xi, eta)
     in the reference element using subparametric mapping.
 
     :param xi: Reference xi-coordinate.
@@ -188,10 +182,9 @@ def mapping_subpar(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
 
 @njit(cache=instaseis._use_numba_cache)
 def jacobian_subpar(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
-    """
-    Computes the Jacobian matrix for subparametric mapping at (xi, eta).
+    """Computes the Jacobian matrix for subparametric mapping at (xi, eta).
     J = | ds/dxi  ds/deta |
-        | dz/dxi  dz/deta |
+        | dz/dxi  dz/deta |.
 
     :param xi: Reference xi-coordinate.
     :param eta: Reference eta-coordinate.
@@ -212,10 +205,9 @@ def jacobian_subpar(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
 def inv_jacobian_subpar(
     xi: float, eta: float, nodes: np.ndarray
 ) -> np.ndarray:
-    """
-    Computes the inverse of the Jacobian matrix for subparametric mapping at (xi, eta).
+    """Computes the inverse of the Jacobian matrix for subparametric mapping at (xi, eta).
     J^-1 = | dxi/ds  dxi/dz |
-           | deta/ds deta/dz |
+           | deta/ds deta/dz |.
 
     :param xi: Reference xi-coordinate.
     :param eta: Reference eta-coordinate.
@@ -242,8 +234,7 @@ def inv_jacobian_subpar(
 # Spheroid Numba functions
 @njit(cache=instaseis._use_numba_cache)
 def mapping_spheroid(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
-    """
-    Computes the physical coordinates (s, z) for a point (xi, eta)
+    """Computes the physical coordinates (s, z) for a point (xi, eta)
     in the reference element using spheroidal mapping.
 
     :param xi: Reference xi-coordinate.
@@ -276,10 +267,9 @@ def mapping_spheroid(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
 
 @njit(cache=instaseis._use_numba_cache)
 def jacobian_spheroid(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
-    """
-    Computes the Jacobian matrix for spheroidal mapping at (xi, eta).
+    """Computes the Jacobian matrix for spheroidal mapping at (xi, eta).
     J = | ds/dxi  ds/deta |
-        | dz/dxi  dz/deta |
+        | dz/dxi  dz/deta |.
 
     :param xi: Reference xi-coordinate.
     :param eta: Reference eta-coordinate.
@@ -339,10 +329,9 @@ def jacobian_spheroid(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
 def inv_jacobian_spheroid(
     xi: float, eta: float, nodes: np.ndarray
 ) -> np.ndarray:
-    """
-    Computes the inverse of the Jacobian matrix for spheroidal mapping at (xi, eta).
+    """Computes the inverse of the Jacobian matrix for spheroidal mapping at (xi, eta).
     J^-1 = | dxi/ds  dxi/dz |
-           | deta/ds deta/dz |
+           | deta/ds deta/dz |.
 
     :param xi: Reference xi-coordinate.
     :param eta: Reference eta-coordinate.
@@ -367,8 +356,7 @@ def inv_jacobian_spheroid(
 # Semino Numba functions
 @njit(cache=instaseis._use_numba_cache)
 def mapping_semino(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
-    """
-    Computes the physical coordinates (s, z) for a point (xi, eta)
+    """Computes the physical coordinates (s, z) for a point (xi, eta)
     in the reference element using semi-spheroidal mapping (semino type:
     linear at bottom, curved at top).
 
@@ -405,10 +393,9 @@ def mapping_semino(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
 
 @njit(cache=instaseis._use_numba_cache)
 def jacobian_semino(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
-    """
-    Computes the Jacobian matrix for semi-spheroidal mapping (semino type) at (xi, eta).
+    """Computes the Jacobian matrix for semi-spheroidal mapping (semino type) at (xi, eta).
     J = | ds/dxi  ds/deta |
-        | dz/dxi  dz/deta |
+        | dz/dxi  dz/deta |.
 
     :param xi: Reference xi-coordinate.
     :param eta: Reference eta-coordinate.
@@ -439,11 +426,10 @@ def jacobian_semino(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
 def inv_jacobian_semino(
     xi: float, eta: float, nodes: np.ndarray
 ) -> np.ndarray:
-    """
-    Computes the inverse of the Jacobian matrix for semi-spheroidal mapping (semino type)
+    """Computes the inverse of the Jacobian matrix for semi-spheroidal mapping (semino type)
     at (xi, eta).
     J^-1 = | dxi/ds  dxi/dz |
-           | deta/ds deta/dz |
+           | deta/ds deta/dz |.
 
     :param xi: Reference xi-coordinate.
     :param eta: Reference eta-coordinate.
@@ -468,8 +454,7 @@ def inv_jacobian_semino(
 # Semiso Numba functions
 @njit(cache=instaseis._use_numba_cache)
 def mapping_semiso(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
-    """
-    Computes the physical coordinates (s, z) for a point (xi, eta)
+    """Computes the physical coordinates (s, z) for a point (xi, eta)
     in the reference element using semi-spheroidal mapping (semiso type:
     linear at top, curved at bottom).
 
@@ -502,10 +487,9 @@ def mapping_semiso(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
 
 @njit(cache=instaseis._use_numba_cache)
 def jacobian_semiso(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
-    """
-    Computes the Jacobian matrix for semi-spheroidal mapping (semiso type) at (xi, eta).
+    """Computes the Jacobian matrix for semi-spheroidal mapping (semiso type) at (xi, eta).
     J = | ds/dxi  ds/deta |
-        | dz/dxi  dz/deta |
+        | dz/dxi  dz/deta |.
 
     :param xi: Reference xi-coordinate.
     :param eta: Reference eta-coordinate.
@@ -540,11 +524,10 @@ def jacobian_semiso(xi: float, eta: float, nodes: np.ndarray) -> np.ndarray:
 def inv_jacobian_semiso(
     xi: float, eta: float, nodes: np.ndarray
 ) -> np.ndarray:
-    """
-    Computes the inverse of the Jacobian matrix for semi-spheroidal mapping (semiso type)
+    """Computes the inverse of the Jacobian matrix for semi-spheroidal mapping (semiso type)
     at (xi, eta).
     J^-1 = | dxi/ds  dxi/dz |
-           | deta/ds deta/dz |
+           | deta/ds deta/dz |.
 
     :param xi: Reference xi-coordinate.
     :param eta: Reference eta-coordinate.
@@ -571,8 +554,7 @@ def inv_jacobian_semiso(
 def _inv_mapping_iterative(
     s: float, z: float, nodes: np.ndarray, mapping_func, inv_jacobian_func
 ) -> np.ndarray:
-    """
-    Iteratively computes the reference coordinates (xi, eta) for a physical
+    """Iteratively computes the reference coordinates (xi, eta) for a physical
     point (s, z) using Newton's method. This is a generic function used by
     the type-specific inverse mapping functions.
 
@@ -621,8 +603,7 @@ def _inv_mapping_iterative(
 
 @njit()
 def inv_mapping_spheroid(s: float, z: float, nodes: np.ndarray) -> np.ndarray:
-    """
-    Computes the reference coordinates (xi, eta) for a physical point (s, z)
+    """Computes the reference coordinates (xi, eta) for a physical point (s, z)
     for a spheroidal element.
 
     :param s: Global s-coordinate of the point.
@@ -637,8 +618,7 @@ def inv_mapping_spheroid(s: float, z: float, nodes: np.ndarray) -> np.ndarray:
 
 @njit()
 def inv_mapping_subpar(s: float, z: float, nodes: np.ndarray) -> np.ndarray:
-    """
-    Computes the reference coordinates (xi, eta) for a physical point (s, z)
+    """Computes the reference coordinates (xi, eta) for a physical point (s, z)
     for a subparametric element.
 
     :param s: Global s-coordinate of the point.
@@ -653,8 +633,7 @@ def inv_mapping_subpar(s: float, z: float, nodes: np.ndarray) -> np.ndarray:
 
 @njit()
 def inv_mapping_semino(s: float, z: float, nodes: np.ndarray) -> np.ndarray:
-    """
-    Computes the reference coordinates (xi, eta) for a physical point (s, z)
+    """Computes the reference coordinates (xi, eta) for a physical point (s, z)
     for a semi-spheroidal element (semino type).
 
     :param s: Global s-coordinate of the point.
@@ -669,8 +648,7 @@ def inv_mapping_semino(s: float, z: float, nodes: np.ndarray) -> np.ndarray:
 
 @njit()
 def inv_mapping_semiso(s: float, z: float, nodes: np.ndarray) -> np.ndarray:
-    """
-    Computes the reference coordinates (xi, eta) for a physical point (s, z)
+    """Computes the reference coordinates (xi, eta) for a physical point (s, z)
     for a semi-spheroidal element (semiso type).
 
     :param s: Global s-coordinate of the point.

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Wrappers using Numba around functions for computing strain tensors.
+"""Wrappers using Numba around functions for computing strain tensors.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Testing rotation module
+"""Testing rotation module.
 
 :copyright:
     Martin van Driel (Martin@vanDriel.de), 2020

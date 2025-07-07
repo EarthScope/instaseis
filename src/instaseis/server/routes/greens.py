@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-:copyright:
+""":copyright:
     Martin van Driel (vandriel@erdw.ethz.ch), 2020
     Lion Krischer (lion.krischer@gmail.com), 2020
 :license:
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
-    (http://www.gnu.org/copyleft/lgpl.html)
+    (http://www.gnu.org/copyleft/lgpl.html).
 """
 
 import concurrent.futures
@@ -39,8 +38,7 @@ def _get_greens(
     label,
     sacheader,
 ):
-    """
-    Extract a Green's function from the passed db and write it either to a
+    """Extract a Green's function from the passed db and write it either to a
     MiniSEED or a SACZIP file.
 
     :param db: An open instaseis database.
@@ -140,8 +138,7 @@ class GreensFunctionHandler(InstaseisTimeSeriesHandler):
         super(GreensFunctionHandler, self).__init__(*args, **kwargs)
 
     def validate_parameters(self, args):
-        """
-        Function attempting to validate that the passed parameters are
+        """Function attempting to validate that the passed parameters are
         valid. Does not need to check the types as that has already been done.
         """
         info = self.application.db.info

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Base Instaseis Request handler currently only settings default headers.
+"""Base Instaseis Request handler currently only settings default headers.
 
     :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
@@ -35,8 +34,7 @@ class InstaseisTimeSeriesHandler(InstaseisRequestHandler, metaclass=ABCMeta):
         super(InstaseisTimeSeriesHandler, self).__init__(*args, **kwargs)
 
     def on_connection_close(self):  # pragma: no cover
-        """
-        Called when the client cancels the connection. Then the loop
+        """Called when the client cancels the connection. Then the loop
         requesting seismograms will stop.
         """
         InstaseisRequestHandler.on_connection_close(self)
@@ -113,9 +111,7 @@ class InstaseisTimeSeriesHandler(InstaseisRequestHandler, metaclass=ABCMeta):
         return args
 
     def validate_common_parameters(self, args):
-        """
-        Also ensures some consistency across the routes.
-        """
+        """Also ensures some consistency across the routes."""
         info = self.application.db.info
 
         if "components" in self.arguments:
@@ -184,15 +180,13 @@ class InstaseisTimeSeriesHandler(InstaseisRequestHandler, metaclass=ABCMeta):
 
     @abstractmethod
     def validate_parameters(self, args):  # pragma: no cover
-        """
-        Implement this function to make checks not already performed in
+        """Implement this function to make checks not already performed in
         validate_common_parameters().
         """
         raise NotImplementedError
 
     def parse_time_settings(self, args):
-        """
-        Attempt to figure out the time settings.
+        """Attempt to figure out the time settings.
 
         This is pretty messy unfortunately. After this method has been
         called, args.origintime will always be set to an absolute time.
@@ -334,9 +328,7 @@ class InstaseisTimeSeriesHandler(InstaseisRequestHandler, metaclass=ABCMeta):
         return tt
 
     def validate_geometry(self, source, receiver):
-        """
-        Validate the source-receiver geometry.
-        """
+        """Validate the source-receiver geometry."""
         info = self.application.db.info
 
         # Any single...
@@ -382,8 +374,7 @@ class InstaseisTimeSeriesHandler(InstaseisRequestHandler, metaclass=ABCMeta):
     def get_phase_relative_times(
         self, args, source, receiver, min_starttime, max_endtime
     ):
-        """
-        Helper function getting the times for each receiver for
+        """Helper function getting the times for each receiver for
         phase-relative offsets.
 
         Returns None in case there either is no phase at the
@@ -484,9 +475,7 @@ class InstaseisTimeSeriesHandler(InstaseisRequestHandler, metaclass=ABCMeta):
         return receivers
 
     def validate_receiver_parameters(self, args):
-        """
-        Useful for routes that use single receivers.
-        """
+        """Useful for routes that use single receivers."""
         # The networkcode and stationcode parameters have a maximum number
         # of letters.
         if args.stationcode and len(args.stationcode) > 5:

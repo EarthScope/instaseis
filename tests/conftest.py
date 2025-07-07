@@ -15,9 +15,7 @@ TEST_DATA = os.path.join(os.path.dirname(__file__), "data")
 
 @pytest.fixture(autouse=True)
 def add_test_files(doctest_namespace):
-    """
-    Add some files into the doctest namespace so they can be used within.
-    """
+    """Add some files into the doctest namespace so they can be used within."""
     doctest_namespace["srf_file"] = os.path.join(
         TEST_DATA, "strike_slip_eq_10pts.srf"
     )
@@ -29,8 +27,7 @@ def add_test_files(doctest_namespace):
 
 
 def repack_databases():
-    """
-    Repack databases and create a couple of temporary test databases.
+    """Repack databases and create a couple of temporary test databases.
 
     It will generate various repacked databases and use them in the test
     suite - this for one tests the repacking but also that Instaseis can
@@ -331,8 +328,7 @@ except ImportError:
 
 
 def is_controller(config):
-    """
-    Returns True/False if the current node is the controller node.
+    """Returns True/False if the current node is the controller node.
 
     Only applies to if run with pytest-xdist.
     """
@@ -368,8 +364,7 @@ def pytest_unconfigure(config):
 
 
 def pytest_configure_node(node):  # pragma: no cover
-    """
-    This is only called on the controller - we use it to send the information to
+    """This is only called on the controller - we use it to send the information to
     all the workers.
 
     Only applies to if run with pytest-xdist.

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Instaseis database class for remote access over HTTP.
+"""Instaseis database class for remote access over HTTP.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
@@ -28,13 +27,11 @@ from .. import (
 
 
 class RemoteInstaseisDB(BaseInstaseisDB):
-    """
-    Remote Instaseis database interface.
-    """
+
+    """Remote Instaseis database interface."""
 
     def __init__(self, url, *args, **kwargs):
-        """
-        :param url: URL to the remote Instaseis server.
+        """:param url: URL to the remote Instaseis server.
         :type db_path: str
         """
         self.url = url
@@ -68,8 +65,7 @@ class RemoteInstaseisDB(BaseInstaseisDB):
         self._get_info()
 
     def _get_seismograms(self, source, receiver, components=("Z", "N", "E")):
-        """
-        Extract seismograms for a moment tensor point source from the AxiSEM
+        """Extract seismograms for a moment tensor point source from the AxiSEM
         database.
 
         :param source: instaseis.Source or instaseis.ForceSource object
@@ -153,9 +149,7 @@ class RemoteInstaseisDB(BaseInstaseisDB):
         return url
 
     def _download_url(self, url):
-        """
-        Helper function downloading data from a URL.
-        """
+        """Helper function downloading data from a URL."""
         r = requests.get(url)
         # Not tested in test suite as it would be awkward to do. Manually
         # tested and should be good.
@@ -166,8 +160,7 @@ class RemoteInstaseisDB(BaseInstaseisDB):
         return r.json()
 
     def _get_info(self):
-        """
-        Returns a dictionary with information about the currently loaded
+        """Returns a dictionary with information about the currently loaded
         database.
         """
         info = self._download_url(self._get_url(path="info"))

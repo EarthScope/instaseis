@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Tests for the Instaseis server.
+"""Tests for the Instaseis server.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
@@ -44,9 +43,7 @@ def _compare_streams(st1, st2):
 
 
 def fetch_sync(client, url, **kwargs):
-    """
-    Helper function to call an async test client in a sync test case.
-    """
+    """Helper function to call an async test client in a sync test case."""
 
     async def f():
         try:
@@ -61,8 +58,7 @@ def fetch_sync(client, url, **kwargs):
 
 
 def test_root_route(all_clients):
-    """
-    Shows very basic information and the version of the client. Test is run
+    """Shows very basic information and the version of the client. Test is run
     for all clients.
     """
     client = all_clients
@@ -77,8 +73,7 @@ def test_root_route(all_clients):
 
 
 def test_info_route(all_clients):
-    """
-    Tests that the /info route returns the information dictionary and does
+    """Tests that the /info route returns the information dictionary and does
     not mess with anything.
 
     Test is parameterized to run for all test databases.
@@ -117,9 +112,7 @@ def test_info_route(all_clients):
 
 
 def test_greens_function_error_handling_no_reciprocal_db(all_clients):
-    """
-    Tests the error the greens route gives if the database is not reciprocal.
-    """
+    """Tests the error the greens route gives if the database is not reciprocal."""
     client = all_clients
 
     params = {
@@ -150,9 +143,7 @@ def test_greens_function_error_handling_no_reciprocal_db(all_clients):
 
 
 def test_greens_function_error_handling(all_greens_clients):
-    """
-    Tests error handling of the /greens_function route. Very basic for now
-    """
+    """Tests error handling of the /greens_function route. Very basic for now."""
     client = all_greens_clients
 
     basic_parameters = {
@@ -229,8 +220,7 @@ def test_greens_function_error_handling(all_greens_clients):
 
 
 def test_greens_function_retrieval(all_greens_clients):
-    """
-    Tests if the greens functions requested from the server are identical to
+    """Tests if the greens functions requested from the server are identical to
     the one requested with the local instaseis client.
     """
     client = all_greens_clients
@@ -482,8 +472,7 @@ def test_phase_relative_offsets_but_no_ttimes_callback_greens_function(
 def test_phase_relative_offset_failures_greens_function(
     all_greens_clients_ttimes_callback,
 ):
-    """
-    Tests some common failures for the phase relative offsets with the
+    """Tests some common failures for the phase relative offsets with the
     greens function route.
     """
     client = all_greens_clients_ttimes_callback
@@ -517,8 +506,7 @@ def test_phase_relative_offset_failures_greens_function(
 def test_phase_relative_offsets_greens_function(
     all_greens_clients_ttimes_callback,
 ):
-    """
-    Test phase relative offsets with the green's function route.
+    """Test phase relative offsets with the green's function route.
 
     + must be encoded with %2B
     - must be encoded with %2D
@@ -683,8 +671,7 @@ def test_greens_function_start_and_origintime(all_greens_clients):
 
 
 def test_raw_seismograms_error_handling(all_clients):
-    """
-    Tests error handling of the /seismograms_raw route. Potentially outwards
+    """Tests error handling of the /seismograms_raw route. Potentially outwards
     facing thus tested rather well.
     """
     client = all_clients
@@ -829,8 +816,7 @@ def test_raw_seismograms_error_handling(all_clients):
 
 
 def test_seismograms_raw_route(all_clients):
-    """
-    Test the raw routes. Make sure the response is a MiniSEED file with the
+    """Test the raw routes. Make sure the response is a MiniSEED file with the
     correct channels.
 
     Once again executed for each known test database.
@@ -955,8 +941,7 @@ def test_seismograms_raw_route(all_clients):
 
 
 def test_mu_is_passed_as_header_value(all_clients):
-    """
-    Makes sure mu is passed as a header value.
+    """Makes sure mu is passed as a header value.
 
     Also tests the other headers.
     """
@@ -990,9 +975,7 @@ def test_mu_is_passed_as_header_value(all_clients):
 
 
 def test_object_creation_for_raw_seismogram_route(all_clients):
-    """
-    Tests that the correct objects are created for the raw seismogram route.
-    """
+    """Tests that the correct objects are created for the raw seismogram route."""
     client = all_clients
     db = instaseis.open_db(client.filepath, read_on_demand=True)
 
@@ -1232,8 +1215,7 @@ def test_object_creation_for_raw_seismogram_route(all_clients):
 
 
 def test_seismograms_error_handling(all_clients):
-    """
-    Tests error handling of the /seismograms route. Potentially outwards
+    """Tests error handling of the /seismograms route. Potentially outwards
     facing thus tested rather well.
     """
     client = all_clients
@@ -1375,9 +1357,7 @@ def test_seismograms_error_handling(all_clients):
 
 
 def test_object_creation_for_seismogram_route(all_clients):
-    """
-    Tests that the correct objects are created for the seismogram route.
-    """
+    """Tests that the correct objects are created for the seismogram route."""
     client = all_clients
     db = instaseis.open_db(client.filepath, read_on_demand=True)
 
@@ -1863,8 +1843,7 @@ def test_object_creation_for_seismogram_route(all_clients):
 
 
 def test_seismograms_retrieval(all_clients):
-    """
-    Tests if the seismograms requested from the server are identical to the
+    """Tests if the seismograms requested from the server are identical to the
     on requested with the local instaseis client.
     """
     client = all_clients
@@ -2327,8 +2306,7 @@ def test_seismograms_retrieval(all_clients):
 
 
 def test_output_formats(all_clients):
-    """
-    The /seismograms route can return data either as MiniSEED or as zip
+    """The /seismograms route can return data either as MiniSEED or as zip
     archive containing multiple SAC files.
     """
     client = all_clients
@@ -2479,8 +2457,7 @@ def test_output_formats(all_clients):
 
 
 def test_output_sacheader(all_clients):
-    """
-    The /seismograms route can return data as zip archive containing multiple
+    """The /seismograms route can return data as zip archive containing multiple
     SAC files. For sacheader=geocentric, the SAC headers are populated using
     geocentric latitudes (input latitudes). For sacheader not defined or
     sacheader=geodetic, the SAC header is populated using geodetic latitudes.
@@ -2593,8 +2570,7 @@ def test_output_sacheader(all_clients):
 
 
 def test_coordinates_route_with_no_coordinate_callback(all_clients):
-    """
-    If no coordinate callback has been set, the coordinate route should
+    """If no coordinate callback has been set, the coordinate route should
     return 404.
     """
     client = all_clients
@@ -2606,9 +2582,7 @@ def test_coordinates_route_with_no_coordinate_callback(all_clients):
 def test_coordinates_route_with_stations_coordinates_callback(
     all_clients_station_coordinates_callback,
 ):
-    """
-    Tests the /coordinates route.
-    """
+    """Tests the /coordinates route."""
     client = all_clients_station_coordinates_callback
 
     # 404 is returned if no coordinates are found.
@@ -2677,9 +2651,7 @@ def test_coordinates_route_with_stations_coordinates_callback(
 
 
 def test_cors_headers(all_clients_all_callbacks):
-    """
-    Check that all routes return CORS headers.
-    """
+    """Check that all routes return CORS headers."""
     client = all_clients_all_callbacks
 
     request = fetch_sync(client, "/")
@@ -2746,9 +2718,7 @@ def test_cors_headers(all_clients_all_callbacks):
 
 
 def test_cors_headers_failing_requests(all_clients_all_callbacks):
-    """
-    Check that all routes return CORS headers also for failing requests.
-    """
+    """Check that all routes return CORS headers also for failing requests."""
     client = all_clients_all_callbacks
 
     request = fetch_sync(client, "/coordinates")
@@ -2781,8 +2751,7 @@ def test_cors_headers_failing_requests(all_clients_all_callbacks):
 
 
 def test_gzipped_responses(all_clients_all_callbacks):
-    """
-    The JSON responses should all be gzipped if requested.
+    """The JSON responses should all be gzipped if requested.
 
     Starting with tornado 4.3 responses smaller than 1000 bytes do no longer
     get compressed. Thus we can also test some responses here.
@@ -2852,8 +2821,7 @@ def test_gzipped_responses(all_clients_all_callbacks):
 def test_multiple_seismograms_retrieval_no_format_given(
     all_clients_station_coordinates_callback,
 ):
-    """
-    Tests  the retrieval of multiple station in one request with no passed
+    """Tests  the retrieval of multiple station in one request with no passed
     format parameter. This results in saczip return values.
     """
     client = all_clients_station_coordinates_callback
@@ -3095,8 +3063,7 @@ def test_multiple_seismograms_retrieval_no_format_given(
 def test_multiple_seismograms_retrieval_no_format_given_single_station(
     all_clients_station_coordinates_callback,
 ):
-    """
-    Tests  the retrieval of multiple station in one request with no passed
+    """Tests  the retrieval of multiple station in one request with no passed
     format parameter. This results in sac return values.
 
     In this case the query is constructed so that it only returns a single
@@ -3329,8 +3296,7 @@ def test_multiple_seismograms_retrieval_no_format_given_single_station(
 def test_multiple_seismograms_retrieval_mseed_format(
     all_clients_station_coordinates_callback,
 ):
-    """
-    Tests  the retrieval of multiple station in one request with the mseed
+    """Tests  the retrieval of multiple station in one request with the mseed
     format parameter.
     """
     client = all_clients_station_coordinates_callback
@@ -3584,8 +3550,7 @@ def test_multiple_seismograms_retrieval_mseed_format(
 def test_multiple_seismograms_retrieval_saczip_format(
     all_clients_station_coordinates_callback,
 ):
-    """
-    Tests  the retrieval of multiple station in one request with the saczip
+    """Tests  the retrieval of multiple station in one request with the saczip
     format parameter.
     """
     client = all_clients_station_coordinates_callback
@@ -3854,9 +3819,7 @@ def test_multiple_seismograms_retrieval_saczip_format(
 def test_multiple_seismograms_retrieval_invalid_format(
     all_clients_station_coordinates_callback,
 ):
-    """
-    Tests  the retrieval of multiple station with an invalid format.
-    """
+    """Tests  the retrieval of multiple station with an invalid format."""
     client = all_clients_station_coordinates_callback
 
     params = {
@@ -3878,8 +3841,7 @@ def test_multiple_seismograms_retrieval_invalid_format(
 def test_multiple_seismograms_retrieval_no_stations(
     all_clients_station_coordinates_callback,
 ):
-    """
-    Tests  the retrieval of multiple station where the request ends up in no
+    """Tests  the retrieval of multiple station where the request ends up in no
     found stations.
     """
     client = all_clients_station_coordinates_callback
@@ -3900,9 +3862,7 @@ def test_multiple_seismograms_retrieval_no_stations(
 
 
 def test_unknown_parameter_raises(all_clients):
-    """
-    Unknown parameters should raise.
-    """
+    """Unknown parameters should raise."""
     client = all_clients
 
     # Normal request works fine.
@@ -3953,8 +3913,7 @@ def test_unknown_parameter_raises(all_clients):
 
 
 def test_passing_duplicate_parameter_raises(all_clients):
-    """
-    While valid with HTTP, duplicate parameters are not allowed within
+    """While valid with HTTP, duplicate parameters are not allowed within
     instaseis. This should thus raise an error to avoid confusion of users.
     """
     client = all_clients
@@ -4007,9 +3966,7 @@ def test_passing_duplicate_parameter_raises(all_clients):
 
 
 def test_passing_invalid_time_settings_raises(all_clients):
-    """
-    Tests that invalid time settings raise.
-    """
+    """Tests that invalid time settings raise."""
     origin_time = obspy.UTCDateTime(2015, 1, 1)
     client = all_clients
     params = {
@@ -4058,9 +4015,7 @@ def test_passing_invalid_time_settings_raises(all_clients):
 
 
 def test_time_settings_for_seismograms_route(all_clients):
-    """
-    Tests the advanced time settings.
-    """
+    """Tests the advanced time settings."""
     client = all_clients
 
     origin_time = obspy.UTCDateTime(2015, 1, 1)
@@ -4170,8 +4125,7 @@ def test_time_settings_for_seismograms_route(all_clients):
 
 
 def test_event_route_with_no_event_callback(all_clients):
-    """
-    If no event information callback has been set, the event route should
+    """If no event information callback has been set, the event route should
     return 404.
     """
     client = all_clients
@@ -4183,9 +4137,7 @@ def test_event_route_with_no_event_callback(all_clients):
 def test_event_route_with_event_coordinates_callback(
     all_clients_event_callback,
 ):
-    """
-    Tests the /event route.
-    """
+    """Tests the /event route."""
     client = all_clients_event_callback
 
     # Missing 'id' parameter.
@@ -4220,9 +4172,7 @@ def test_event_route_with_event_coordinates_callback(
 def test_station_query_various_failures(
     all_clients_station_coordinates_callback,
 ):
-    """
-    The station query can fail for various reasons.
-    """
+    """The station query can fail for various reasons."""
     client = all_clients_station_coordinates_callback
 
     params = {
@@ -4281,9 +4231,7 @@ def test_station_query_various_failures(
 
 
 def test_station_query_no_callback(all_clients):
-    """
-    Test the error message when no station callback is available.
-    """
+    """Test the error message when no station callback is available."""
     client = all_clients
 
     params = {
@@ -4306,9 +4254,7 @@ def test_station_query_no_callback(all_clients):
 
 
 def test_event_query_no_callbacks(all_clients):
-    """
-    Test the error message when no event callback is available.
-    """
+    """Test the error message when no event callback is available."""
     client = all_clients
 
     params = {"receiverlatitude": 10, "receiverlongitude": 10}
@@ -4324,9 +4270,7 @@ def test_event_query_no_callbacks(all_clients):
 
 
 def test_event_query_various_failures(all_clients_event_callback):
-    """
-    Various failure states of the eventid queries.
-    """
+    """Various failure states of the eventid queries."""
     client = all_clients_event_callback
 
     params = {"receiverlatitude": 10, "receiverlongitude": 10}
@@ -4369,9 +4313,7 @@ def test_event_query_various_failures(all_clients_event_callback):
 
 
 def test_event_parameters_by_querying(all_clients_event_callback):
-    """
-    Test the query by eventid.
-    """
+    """Test the query by eventid."""
     client = all_clients_event_callback
 
     # Only works for reciprocal databases. Otherwise the depth if fixed.
@@ -4448,9 +4390,7 @@ def test_event_parameters_by_querying(all_clients_event_callback):
 
 
 def test_event_query_seismogram_non_existent_event(all_clients_event_callback):
-    """
-    Tests querying for an event that is not found.
-    """
+    """Tests querying for an event that is not found."""
     client = all_clients_event_callback
 
     params = {
@@ -4466,8 +4406,7 @@ def test_event_query_seismogram_non_existent_event(all_clients_event_callback):
 def test_mu_parameter_for_seismograms_and_greens_function_route(
     all_clients_station_coordinates_callback,
 ):
-    """
-    Test that the mu parameter is passed on for seismograms anf the greens
+    """Test that the mu parameter is passed on for seismograms anf the greens
     function route.
     """
     client = all_clients_station_coordinates_callback
@@ -4531,9 +4470,7 @@ def test_mu_parameter_for_seismograms_and_greens_function_route(
 
 
 def test_label_parameter(all_greens_clients):
-    """
-    Test the 'label' parameter of the /seismograms route.
-    """
+    """Test the 'label' parameter of the /seismograms route."""
     prefix = "attachment; filename="
     client = all_greens_clients
 
@@ -4626,9 +4563,7 @@ def test_label_parameter(all_greens_clients):
 
 
 def test_ttimes_route_no_callback(all_clients):
-    """
-    Tests the ttimes route with no available callbacks.
-    """
+    """Tests the ttimes route with no available callbacks."""
     client = all_clients
 
     request = fetch_sync(
@@ -4644,9 +4579,7 @@ def test_ttimes_route_no_callback(all_clients):
 
 
 def test_ttimes_route(all_clients_ttimes_callback):
-    """
-    Test for the ttimes route.
-    """
+    """Test for the ttimes route."""
     client = all_clients_ttimes_callback
 
     # Test with missing parameters.
@@ -4761,9 +4694,7 @@ def test_ttimes_route(all_clients_ttimes_callback):
 
 
 def test_network_and_station_code_settings(all_clients):
-    """
-    Tests the network and station code settings.
-    """
+    """Tests the network and station code settings."""
     client = all_clients
 
     params = {
@@ -4848,8 +4779,7 @@ def test_network_and_station_code_settings(all_clients):
 
 
 def test_phase_relative_offsets(all_clients_ttimes_callback):
-    """
-    Test phase relative offsets.
+    """Test phase relative offsets.
 
     + must be encoded with %2B
     - must be encoded with %2D
@@ -5141,9 +5071,7 @@ def test_phase_relative_offset_different_time_representations(
 
 
 def test_phase_relative_offset_failures(all_clients_ttimes_callback):
-    """
-    Tests some common failures for the phase relative offsets.
-    """
+    """Tests some common failures for the phase relative offsets."""
     client = all_clients_ttimes_callback
 
     params = {
@@ -5547,9 +5475,7 @@ def test_various_failure_conditions(all_clients_all_callbacks):
 
 
 def test_sac_dist_header_edge_case(all_clients):
-    """
-    Regression test for https://github.com/krischer/instaseis/issues/55.
-    """
+    """Regression test for https://github.com/krischer/instaseis/issues/55."""
     client = all_clients
 
     params = {
@@ -5594,9 +5520,7 @@ def test_sac_dist_header_edge_case(all_clients):
 
 
 def test_sac_headers(all_clients):
-    """
-    Tests the sac headers.
-    """
+    """Tests the sac headers."""
     client = all_clients
 
     params = {
@@ -5660,9 +5584,7 @@ def test_sac_headers(all_clients):
 
 
 def test_sac_headers_azimuth_and_incidence(all_clients):
-    """
-    Tests azimuth and component inclination sac headers.
-    """
+    """Tests azimuth and component inclination sac headers."""
     client = all_clients
     db = instaseis.open_db(client.filepath)
 
@@ -5749,8 +5671,7 @@ def test_sac_headers_azimuth_and_incidence(all_clients):
 
 
 def test_sac_headers_azimuth_and_incidence_greens_route(all_greens_clients):
-    """
-    Same thing but for the greens route - in this case nothing should be set
+    """Same thing but for the greens route - in this case nothing should be set
     as its not really defined on non-geographic systems.
     """
     client = all_greens_clients
@@ -5775,9 +5696,7 @@ def test_sac_headers_azimuth_and_incidence_greens_route(all_greens_clients):
 
 
 def test_dt_settings(all_clients):
-    """
-    Cannot downsample nor sample to more than 100 Hz.
-    """
+    """Cannot downsample nor sample to more than 100 Hz."""
     client = all_clients
 
     # Requesting exactly at the initial sampling rate works.
@@ -5855,9 +5774,7 @@ def test_dt_settings(all_clients):
 
 
 def test_scale_parameter(all_clients):
-    """
-    Tests the `scale` parameter of the /seismograms route.
-    """
+    """Tests the `scale` parameter of the /seismograms route."""
     client = all_clients
     db = instaseis.open_db(client.filepath)
 
@@ -6007,8 +5924,7 @@ def test_scale_parameter(all_clients):
 
 
 def test_error_handling_custom_stf(all_clients):
-    """
-    Tests the error handling when passing a custom STF for the /seismograms
+    """Tests the error handling when passing a custom STF for the /seismograms
     service.
     """
     client = all_clients
@@ -6140,9 +6056,7 @@ def test_error_handling_custom_stf(all_clients):
 
 
 def test_custom_stf(all_clients):
-    """
-    Test the custom STF.
-    """
+    """Test the custom STF."""
     client = all_clients
     db = instaseis.open_db(client.filepath)
 
@@ -6232,9 +6146,7 @@ def test_custom_stf(all_clients):
 
 
 def test_gaussian_source_time_function_calculation():
-    """
-    Tests the calculation of a Gaussian source time function.
-    """
+    """Tests the calculation of a Gaussian source time function."""
     # Test the integral. More accurate for smaller deltas.
     _, y = util.get_gaussian_source_time_function(4, 1.0)
     np.testing.assert_allclose(simpson(y, dx=1.0), 1.0, rtol=1e-1)
@@ -6259,9 +6171,7 @@ def test_gaussian_source_time_function_calculation():
 
 
 def test_sourcewidth_parameter(all_clients):
-    """
-    Tests the sourcewidth parameter.
-    """
+    """Tests the sourcewidth parameter."""
     client = all_clients
     db = instaseis.open_db(client.filepath, read_on_demand=True)
 
@@ -6315,8 +6225,7 @@ def test_sourcewidth_parameter(all_clients):
 
 
 def test_cache_is_not_modified(all_clients):
-    """
-    Test for https://github.com/krischer/instaseis/issues/76.
+    """Test for https://github.com/krischer/instaseis/issues/76.
 
     Make sure the cached values are not internally modified by requesting
     things multiple times multiple times and asserting they are identical

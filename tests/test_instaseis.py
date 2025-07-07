@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Basic integration tests for the AxiSEM database Python interface.
+"""Basic integration tests for the AxiSEM database Python interface.
 
 :copyright:
     Martin van Driel (Martin@vanDriel.de), 2020
@@ -75,9 +74,7 @@ BW_DISPL_DBS = [_i for _i in DBS if "_db_bwd_displ_" in _i]
 
 @pytest.mark.parametrize("bwd_db", BW_DISPL_DBS)
 def test_fwd_vs_bwd(bwd_db):
-    """
-    Test fwd against bwd mode
-    """
+    """Test fwd against bwd mode."""
     instaseis_fwd = find_and_open_files(os.path.join(DATA, "100s_db_fwd"))
     instaseis_bwd = find_and_open_files(bwd_db)
 
@@ -159,8 +156,7 @@ def test_fwd_vs_bwd(bwd_db):
 
 @pytest.mark.parametrize("bwd_db", BW_DISPL_DBS)
 def test_fwd_vs_bwd_axial(bwd_db):
-    """
-    Test fwd against bwd mode, axial element. Differences are a bit larger then
+    """Test fwd against bwd mode, axial element. Differences are a bit larger then
     in non axial case, presumably because the close source, which is not
     exactly a point source in the SEM representation.
     """
@@ -249,9 +245,7 @@ def test_fwd_vs_bwd_axial(bwd_db):
 
 @pytest.mark.parametrize("bwd_db", BW_DISPL_DBS)
 def test_incremental_bwd(bwd_db):
-    """
-    incremental tests of bwd mode with displ_only db
-    """
+    """Incremental tests of bwd mode with displ_only db."""
     instaseis_bwd = find_and_open_files(bwd_db)
 
     receiver = Receiver(latitude=42.6390, longitude=74.4940)
@@ -411,9 +405,7 @@ def test_incremental_bwd(bwd_db):
 
 
 def test_vertical_only_db(tmpdir):
-    """
-    Everything should work even if only the vertical component is present.
-    """
+    """Everything should work even if only the vertical component is present."""
     # Copy only the vertical component data.
     tmpdir = str(tmpdir)
     path = os.path.join(tmpdir, "PZ", "Data", "ordered_output.nc4")
@@ -454,9 +446,7 @@ def test_vertical_only_db(tmpdir):
 
 
 def test_horizontal_only_db(tmpdir):
-    """
-    Everything should work even if only the horizontal component is present.
-    """
+    """Everything should work even if only the horizontal component is present."""
     # Copy only the horizontal component data.
     tmpdir = str(tmpdir)
     path = os.path.join(tmpdir, "PX", "Data", "ordered_output.nc4")
@@ -577,9 +567,7 @@ def test_requesting_wrong_component_vertical(tmpdir):
 
 
 def test_incremental_fwd():
-    """
-    incremental tests of fwd mode
-    """
+    """Incremental tests of fwd mode."""
     instaseis_fwd = find_and_open_files(os.path.join(DATA, "100s_db_fwd"))
 
     receiver = Receiver(latitude=42.6390, longitude=74.4940)
@@ -675,9 +663,7 @@ def test_incremental_fwd():
 
 
 def test_incremental_bwd_strain_only():
-    """
-    incremental tests of bwd mode with strain_only DB
-    """
+    """Incremental tests of bwd mode with strain_only DB."""
     instaseis_bwd = find_and_open_files(
         os.path.join(DATA, "100s_db_bwd_strain_only")
     )
@@ -733,9 +719,7 @@ def test_incremental_bwd_strain_only():
 
 @pytest.mark.parametrize("db", BW_DISPL_DBS)
 def test_incremental_bwd_force_source(db):
-    """
-    incremental tests of bwd mode with source force
-    """
+    """Incremental tests of bwd mode with source force."""
     instaseis_bwd = find_and_open_files(db)
 
     receiver = Receiver(latitude=42.6390, longitude=74.4940)
@@ -816,9 +800,7 @@ def test_incremental_bwd_force_source(db):
 
 @pytest.mark.parametrize("bwd_db", BW_DISPL_DBS)
 def test_get_greens_vs_get_seismogram(bwd_db):
-    """
-    Test get_greens_function() against default get_seismograms()
-    """
+    """Test get_greens_function() against default get_seismograms()."""
     db = find_and_open_files(bwd_db)
 
     depth_in_m = 1000
@@ -918,9 +900,7 @@ def test_get_greens_vs_get_seismogram(bwd_db):
 
 @pytest.mark.parametrize("bwd_db", BW_DISPL_DBS)
 def test_greens_function_failures(bwd_db):
-    """
-    Tests some failures for the greens function calculation.
-    """
+    """Tests some failures for the greens function calculation."""
     db = find_and_open_files(bwd_db)
 
     depth_in_m = 1000
@@ -977,9 +957,7 @@ def test_greens_function_failures(bwd_db):
 
 @pytest.mark.parametrize("bwd_db", BW_DISPL_DBS)
 def test_finite_source(bwd_db):
-    """
-    incremental tests of bwd mode with source force
-    """
+    """Incremental tests of bwd mode with source force."""
     from obspy.signal.filter import lowpass
 
     instaseis_bwd = find_and_open_files(bwd_db)
@@ -1095,9 +1073,7 @@ def test_finite_source(bwd_db):
 
 
 def test_get_band_code_method():
-    """
-    Dummy test assuring the band code is determined correctly.
-    """
+    """Dummy test assuring the band code is determined correctly."""
     codes = {
         0.0005: "F",
         0.001: "F",
@@ -1119,9 +1095,7 @@ def test_get_band_code_method():
 
 @pytest.mark.parametrize("bwd_db", BW_DISPL_DBS)
 def test_origin_time_of_resulting_seismograms(bwd_db):
-    """
-    Makes sure that the origin time is passed to the seismograms.
-    """
+    """Makes sure that the origin time is passed to the seismograms."""
     instaseis_bwd = find_and_open_files(bwd_db)
 
     receiver = Receiver(latitude=42.6390, longitude=74.4940)
@@ -1168,8 +1142,7 @@ def test_origin_time_of_resulting_seismograms(bwd_db):
 
 @pytest.mark.parametrize("bwd_db", BW_DISPL_DBS)
 def test_higher_level_event_and_receiver_parsing(bwd_db):
-    """
-    Tests that events and receivers can be parsed from different supported
+    """Tests that events and receivers can be parsed from different supported
     formats.
     """
     # Create an event and modify it to match the settings of the test data.
@@ -1240,8 +1213,7 @@ def test_available_components_decorator(db):
 
 @pytest.mark.parametrize("db", DBS)
 def test_resampling_and_time_settings(db):
-    """
-    This tests should assure that the origin time is always the peak of the
+    """This tests should assure that the origin time is always the peak of the
     source time function.
     """
     db = find_and_open_files(db)
@@ -1330,8 +1302,7 @@ def test_resampling_and_time_settings(db):
 
 @pytest.mark.parametrize("db", DBS)
 def test_time_settings_with_resample_stf(db):
-    """
-    Test the time settings with resampling an stf. In that case the rules
+    """Test the time settings with resampling an stf. In that case the rules
     are pretty simple: The first sample will always be set to the origin time.
     """
     from obspy.signal.filter import lowpass
@@ -1412,8 +1383,7 @@ def test_time_settings_with_resample_stf(db):
 
 @pytest.mark.parametrize("db", DBS)
 def test_remove_samples_at_end_for_interpolation(db):
-    """
-    Remove some samples at the end for the resampling to avoid boundary
+    """Remove some samples at the end for the resampling to avoid boundary
     effects.
     """
     db = find_and_open_files(db)
@@ -1488,8 +1458,7 @@ def test_remove_samples_at_end_for_interpolation(db):
 
 @pytest.mark.parametrize("db", DBS)
 def test_get_time_information(db):
-    """
-    Tests the _get_seismogram_times() function. Also make sure it is
+    """Tests the _get_seismogram_times() function. Also make sure it is
     consistent with the actually produces seismograms.
     """
     db = find_and_open_files(db)
@@ -1748,8 +1717,7 @@ def test_get_time_information(db):
 
 @pytest.mark.parametrize("db", DBS)
 def test_get_time_information_reconvolve_stf(db):
-    """
-    Tests the _get_seismogram_times() function but with reconvolve_stf = True.
+    """Tests the _get_seismogram_times() function but with reconvolve_stf = True.
     In that case time shifts and what not are no longer applied.
     """
     from obspy.signal.filter import lowpass
@@ -1910,9 +1878,7 @@ def test_get_time_information_reconvolve_stf(db):
 
 
 def test_wgs84_to_geocentric():
-    """
-    Tests the utility function.
-    """
+    """Tests the utility function."""
     assert elliptic_to_geocentric_latitude(0.0) == 0.0
     assert elliptic_to_geocentric_latitude(90.0) == 90.0
     assert elliptic_to_geocentric_latitude(-90.0) == -90.0
@@ -1938,9 +1904,7 @@ def test_wgs84_to_geocentric():
 
 
 def test_geocentric_to_wgs84():
-    """
-    Tests the utility function.
-    """
+    """Tests the utility function."""
     assert geocentric_to_elliptic_latitude(0.0) == 0.0
     assert geocentric_to_elliptic_latitude(90.0) == 90.0
     assert geocentric_to_elliptic_latitude(-90.0) == -90.0
@@ -1966,9 +1930,7 @@ def test_geocentric_to_wgs84():
 
 
 def test_coordinate_conversions_round_trips():
-    """
-    Tests round tripping of the coordinate conversion routines.
-    """
+    """Tests round tripping of the coordinate conversion routines."""
     values = np.linspace(-90, 90, 100)
     for value in values:
         value = float(value)
@@ -2026,9 +1988,7 @@ def test_receiver_settings():
 
 
 def test_some_failure_conditions():
-    """
-    Tests some failure conditions.
-    """
+    """Tests some failure conditions."""
     db = find_and_open_files(os.path.join(DATA, "100s_db_fwd"))
     source = Source(
         latitude=4.0,
@@ -2098,9 +2058,7 @@ def test_sizeof_fmt_function():
 
 
 def test_failures_when_opening_databases(tmpdir):
-    """
-    Tests various failures when opening databases.
-    """
+    """Tests various failures when opening databases."""
     # Add a deep folder that should not be tested.
     os.makedirs(os.path.join(tmpdir.strpath, "1", "2", "3", "4", "5"))
 
@@ -2171,9 +2129,7 @@ def test_failures_when_opening_databases(tmpdir):
 @pytest.mark.parametrize("database_folder", DBS)
 @pytest.mark.parametrize("read_on_demand", [True, False])
 def test_read_on_demand(database_folder, read_on_demand):
-    """
-    Make sure that databases work in read_on_demand mode.
-    """
+    """Make sure that databases work in read_on_demand mode."""
     # The test data is not valid for deep forward DBs.
     if "fwd_deep" in database_folder:
         return
@@ -2232,8 +2188,7 @@ def test_read_on_demand(database_folder, read_on_demand):
     reason="requires generated tests databases.",
 )
 def test_merged_forward_database_layout():
-    """
-    Make sure the merged fwd database layout returns the same result as then
+    """Make sure the merged fwd database layout returns the same result as then
     default forward layout.
     """
     fwd_db = os.path.join(DATA, "100s_db_fwd")
@@ -2278,9 +2233,7 @@ def test_merged_forward_database_layout():
 
 @pytest.mark.parametrize("bwd_db", BW_DISPL_DBS)
 def test_error_handling_source_too_deep(bwd_db):
-    """
-    Tests the error handling if the source is too deep.
-    """
+    """Tests the error handling if the source is too deep."""
     db = find_and_open_files(bwd_db)
     # 900 km is deeper than any test database.
     src = Source(
@@ -2308,9 +2261,7 @@ def test_error_handling_source_too_deep(bwd_db):
 
 @pytest.mark.parametrize("bwd_db", BW_DISPL_DBS)
 def test_error_handling_source_too_shallow(bwd_db):
-    """
-    Tests the error handling if the source is too shallow.
-    """
+    """Tests the error handling if the source is too shallow."""
     db = find_and_open_files(bwd_db)
     src = Source(
         latitude=4.0,
@@ -2336,9 +2287,7 @@ def test_error_handling_source_too_shallow(bwd_db):
 
 
 def test_receiver_too_deep_or_shallow_forward_database():
-    """
-    Test error handling for a too deep or too shallow for the forward mode.
-    """
+    """Test error handling for a too deep or too shallow for the forward mode."""
     db = find_and_open_files(os.path.join(DATA, "100s_db_fwd"))
 
     src = Source(
@@ -2417,8 +2366,7 @@ def test_epicentral_distance_not_in_db(bwd_db):
 
 @pytest.mark.parametrize("bwd_db", BW_DISPL_DBS)
 def test_source_depth_greens_function_error_handling(bwd_db):
-    """
-    Tests the error handling for the greens functions for too deep or too
+    """Tests the error handling for the greens functions for too deep or too
     shallow sources.
     """
     db = find_and_open_files(bwd_db)
@@ -2461,9 +2409,7 @@ def test_source_depth_greens_function_error_handling(bwd_db):
 
 @pytest.mark.parametrize("bwd_db", BW_DISPL_DBS)
 def test_dt_must_be_larger_than_zero(bwd_db):
-    """
-    dt must be larger than zero!
-    """
+    """Dt must be larger than zero!"""
     db = find_and_open_files(bwd_db)
 
     src = Source(
@@ -2507,9 +2453,7 @@ def test_dt_must_be_larger_than_zero(bwd_db):
 
 @pytest.mark.parametrize("bwd_db", BW_DISPL_DBS)
 def test_no_downsampling(bwd_db):
-    """
-    Make sure downsampling is not possible.
-    """
+    """Make sure downsampling is not possible."""
     db = find_and_open_files(bwd_db)
 
     src = Source(
@@ -2572,9 +2516,7 @@ def test_no_downsampling(bwd_db):
 
 @pytest.mark.parametrize("db", BW_DISPL_DBS)
 def test_exception_when_using_a_finite_source_instead_of_a_normal_source(db):
-    """
-    Tests that a sensible error message is raised.
-    """
+    """Tests that a sensible error message is raised."""
     db = find_and_open_files(db)
     src = FiniteSource()
     rec = Receiver(latitude=10.0, longitude=20.0)

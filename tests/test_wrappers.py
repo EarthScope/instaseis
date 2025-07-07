@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Mostly testing the various wrappers.
+"""Mostly testing the various wrappers.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020

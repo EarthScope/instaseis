@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Mesh object also taking care of opening and closing the netCDF files.
+"""Mesh object also taking care of opening and closing the netCDF files.
 
 Please note that this module actually uses h5py instead of the Python
 netcdf4 library to read the files. This enables us to skip one layer of
@@ -31,8 +30,8 @@ from scipy.spatial import cKDTree
 
 
 class Buffer(object):
-    """
-    A simple memory-limited buffer with a dictionary-like interface.
+
+    """A simple memory-limited buffer with a dictionary-like interface.
     Implemented as a kind of priority queue where priority is highest for
     recently accessed items. Thus the "stalest" items are removed first once
     the memory limit it reached.
@@ -54,8 +53,7 @@ class Buffer(object):
         return contains
 
     def get(self, key):
-        """
-        Return an item from the buffer and move it to the end, so it is removed
+        """Return an item from the buffer and move it to the end, so it is removed
         last.
         """
         value = self._buffer.pop(key)
@@ -70,8 +68,7 @@ class Buffer(object):
             return sum(_i.nbytes for _i in value if _i is not None)
 
     def add(self, key, value):
-        """
-        Add an item to the buffer and make sure that the buffer does not exceed
+        """Add an item to the buffer and make sure that the buffer does not exceed
         the maximum size in memory.
         """
         self._buffer[key] = value
@@ -88,8 +85,7 @@ class Buffer(object):
 
     @property
     def efficiency(self):
-        """
-        Return the fraction of calls to the __contains__() routine that
+        """Return the fraction of calls to the __contains__() routine that
         returned True.
         """
         if (self._hits + self._fails) == 0:
@@ -99,9 +95,7 @@ class Buffer(object):
 
 
 def get_time_axis(ds, ndumps):
-    """
-    Helper function to determine the time axis of the mesh.
-    """
+    """Helper function to determine the time axis of the mesh."""
     if ds.shape[0] == ds.shape[1]:
         raise NotImplementedError(
             "Both dimensions in the dataset "
@@ -120,9 +114,8 @@ def get_time_axis(ds, ndumps):
 
 
 class Mesh(object):
-    """
-    A class to handle the actual netCDF files written by AxiSEM.
-    """
+
+    """A class to handle the actual netCDF files written by AxiSEM."""
 
     # Minimal acceptable version of the netCDF database files.
     MIN_FILE_VERSION = 7

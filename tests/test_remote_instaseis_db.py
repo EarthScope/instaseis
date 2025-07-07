@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Tests for the instaseis remote database.
+"""Tests for the instaseis remote database.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
@@ -31,8 +30,7 @@ else:  # pragma: no cover
 
 @responses.activate
 def test_info(all_remote_dbs):
-    """
-    Make sure the info is identical no matter if it comes from a local or
+    """Make sure the info is identical no matter if it comes from a local or
     from a remote database.
     """
     # Remote and local database.
@@ -55,8 +53,7 @@ def test_info(all_remote_dbs):
 
 
 def _compare_streams(r_db, l_db, kwargs):
-    """
-    Helper function comparing streams extracted from local and remote
+    """Helper function comparing streams extracted from local and remote
     instaseis databases.
     """
     r_st = r_db.get_seismograms(**kwargs)
@@ -75,9 +72,7 @@ def _compare_streams(r_db, l_db, kwargs):
 
 @responses.activate
 def test_seismogram_extraction(all_remote_dbs):
-    """
-    Test the seismogram extraction from local and remote databases.
-    """
+    """Test the seismogram extraction from local and remote databases."""
     # Remote and local database.
     r_db = all_remote_dbs
     l_db = instaseis.open_db(r_db._client.filepath)
@@ -167,9 +162,7 @@ def test_seismogram_extraction(all_remote_dbs):
 
 
 def test_initialization_failures():
-    """
-    Tests various initialization failures for the remote instaseis db.
-    """
+    """Tests various initialization failures for the remote instaseis db."""
     # Random error during init.
     with mock.patch(
         "instaseis.database_interfaces.remote_instaseis_db"
@@ -219,9 +212,7 @@ def test_initialization_failures():
 
 @responses.activate
 def test_source_depth_error_handling(all_remote_dbs):
-    """
-    Test the seismogram extraction from local and remote databases.
-    """
+    """Test the seismogram extraction from local and remote databases."""
     db = all_remote_dbs
 
     # Skip forward databases.

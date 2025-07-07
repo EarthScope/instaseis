@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Tests for the array buffer.
+"""Tests for the array buffer.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020

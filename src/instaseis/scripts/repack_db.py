@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Repacking Instaseis databases.
+"""Repacking Instaseis databases.
 
 Requires click, netCDF4, and numpy.
 
@@ -45,8 +44,7 @@ def repack_file(
     transpose,
     quiet=False,
 ):
-    """
-    Transposes all data in the "/Snapshots" group.
+    """Transposes all data in the "/Snapshots" group.
 
     :param input_filename: The input filename.
     :param output_filename: The output filename.
@@ -69,8 +67,7 @@ def repack_file(
 
 
 def recursive_copy(src, dst, contiguous, compression_level, transpose, quiet):
-    """
-    Recursively copy the whole file and transpose the all /Snapshots
+    """Recursively copy the whole file and transpose the all /Snapshots
     variables while at it..
     """
     if src.path == "/Seismograms":
@@ -227,8 +224,7 @@ def recursive_copy(src, dst, contiguous, compression_level, transpose, quiet):
 def recursive_copy_no_snapshots_no_seismograms_no_surface(
     src, dst, quiet, contiguous, compression_level
 ):
-    """
-    A bit of a copy of the recursive_copy function but it does not copy the
+    """A bit of a copy of the recursive_copy function but it does not copy the
     Snapshots, Seismograms, or Surface group.
     """
     for attr in src.ncattrs():
@@ -301,9 +297,7 @@ def recursive_copy_no_snapshots_no_seismograms_no_surface(
 def merge_files(
     filenames, output_folder, contiguous, compression_level, quiet
 ):
-    """
-    Completely unroll and merge both files to a single database.
-    """
+    """Completely unroll and merge both files to a single database."""
     assert len(filenames) in (1, 2, 4)
 
     files = {}

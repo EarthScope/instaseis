@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Abstract base class for all Instaseis database classes.
+"""Abstract base class for all Instaseis database classes.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
@@ -56,9 +55,8 @@ def _diff_and_integrate(n_derivative, data, comp, dt_out):
 
 
 class BaseInstaseisDB(metaclass=ABCMeta):
-    """
-    Base class for all Instaseis database classes defining the user interface.
-    """
+
+    """Base class for all Instaseis database classes defining the user interface."""
 
     def get_greens_function(
         self,
@@ -71,8 +69,7 @@ class BaseInstaseisDB(metaclass=ABCMeta):
         kernelwidth=12,
         definition="seiscomp",
     ):
-        """
-        Extract Green's function from the Green's function database.
+        """Extract Green's function from the Green's function database.
 
         Currently only one definition is implemented: the one assumed by
         Seiscomp, i.e. the components ``TSS``, ``ZSS``, ``RSS``, ``TDS``,
@@ -237,8 +234,7 @@ class BaseInstaseisDB(metaclass=ABCMeta):
         dt=None,
         kernelwidth=12,
     ):
-        """
-        Extract seismograms from the Green's function database.
+        """Extract seismograms from the Green's function database.
 
         :param source: The source definition.
         :type source: :class:`instaseis.source.Source` or
@@ -445,8 +441,9 @@ class BaseInstaseisDB(metaclass=ABCMeta):
 
     @abstractmethod
     def _get_info(self):
-        """
-        Must return a dictionary with the following keys:
+        """Must return a dictionary.
+
+        With the following keys:
 
         ``"is_reciprocal"``, ``"components"``, ``"source_depth"``,
         ``"velocity_model"``, ``"external_model_name"``, ``"attenuation"``,
@@ -471,8 +468,7 @@ class BaseInstaseisDB(metaclass=ABCMeta):
         correct_mu=False,
         progress_callback=None,
     ):
-        """
-        Extract seismograms for a finite source from an Instaseis database.
+        """Extract seismograms for a finite source from an Instaseis database.
 
         :param sources: A collection of point sources.
         :type sources: :class:`~instaseis.source.FiniteSource` or list of
@@ -615,8 +611,7 @@ class BaseInstaseisDB(metaclass=ABCMeta):
     def _get_greens_seiscomp_sanity_checks(
         self, epicentral_distance_degree, source_depth_in_m, kind, dt
     ):
-        """
-        Common sanity checks for the get_greens_seiscomp method.
+        """Common sanity checks for the get_greens_seiscomp method.
 
         :param epicentral_distance_degree: The epicentral distance in degree.
         :type epicentral_distance_degree: float
@@ -680,8 +675,7 @@ class BaseInstaseisDB(metaclass=ABCMeta):
     def _get_seismograms_sanity_checks(
         self, source, receiver, components, kind, dt
     ):
-        """
-        Common sanity checks for the get_seismograms method. Also parses
+        """Common sanity checks for the get_seismograms method. Also parses
         source and receiver objects if necessary.
 
         :param source: instaseis.Source or instaseis.ForceSource object
@@ -890,8 +884,7 @@ class BaseInstaseisDB(metaclass=ABCMeta):
 
     @property
     def default_components(self):
-        """
-        The components returned by default by most of the higher level
+        """The components returned by default by most of the higher level
         routines.
         """
         c = self.available_components
@@ -907,9 +900,7 @@ class BaseInstaseisDB(metaclass=ABCMeta):
 
     @property
     def available_components(self):
-        """
-        Returns a list with all available components.
-        """
+        """Returns a list with all available components."""
         if self.info.components == "4 elemental moment tensors":
             return ["Z", "N", "E", "R", "T"]
         components = []
@@ -928,8 +919,7 @@ def _get_seismogram_times(
     remove_source_shift,
     reconvolve_stf=False,
 ):
-    """
-    Helper function to calculate the final times of seismograms.
+    """Helper function to calculate the final times of seismograms.
 
     It also calculates all the necessary information to determine the final
     times of the seismograms and how to cut the data. This is important to

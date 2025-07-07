@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-:copyright:
+""":copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
 :license:
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
-    (http://www.gnu.org/copyleft/lgpl.html)
+    (http://www.gnu.org/copyleft/lgpl.html).
 """
 
 import collections
@@ -21,8 +20,7 @@ from .reciprocal_merged_instaseis_db import ReciprocalMergedInstaseisDB
 
 
 def find_and_open_files(path, *args, **kwargs):
-    """
-    Find and open Instaseis databases with the corresponding database
+    """Find and open Instaseis databases with the corresponding database
     interface.
 
     Will recursively search the path and return an instaseis database class

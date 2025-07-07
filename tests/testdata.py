@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Tests data either gained from an old DB implementation, AxiSEM, or to guard
+"""Tests data either gained from an old DB implementation, AxiSEM, or to guard
 against regressions.
 """
 

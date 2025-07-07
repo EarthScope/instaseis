@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-:copyright:
+""":copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
 :license:
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
-    (http://www.gnu.org/copyleft/lgpl.html)
+    (http://www.gnu.org/copyleft/lgpl.html).
 """
 
 import concurrent.futures
@@ -50,8 +49,7 @@ def _get_finite_source(
     label,
     sacheader,
 ):
-    """
-    Extract a seismogram from the passed db and write it either to a MiniSEED
+    """Extract a seismogram from the passed db and write it either to a MiniSEED
     or a SACZIP file.
 
     :param db: An open instaseis database.
@@ -291,8 +289,7 @@ class FiniteSourceSeismogramsHandler(InstaseisTimeSeriesHandler):
         )
 
     def validate_parameters(self, args):
-        """
-        Function attempting to validate that the passed parameters are
+        """Function attempting to validate that the passed parameters are
         valid. Does not need to check the types as that has already been done.
         """
         if args.scale == 0.0:
@@ -305,9 +302,7 @@ class FiniteSourceSeismogramsHandler(InstaseisTimeSeriesHandler):
         self.validate_receiver_parameters(args)
 
     def parse_time_settings(self, args, finite_source):
-        """
-        Has to be overwritten as the finite source is a bit too different.
-        """
+        """Has to be overwritten as the finite source is a bit too different."""
         if args.origintime is None:
             args.origintime = self.default_origin_time
 

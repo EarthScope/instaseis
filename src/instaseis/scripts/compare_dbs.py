@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Useful script to make sure two databases return exactly the same the
+"""Useful script to make sure two databases return exactly the same the
 seismograms.
 
 Especially useful to be able to trust the repacking script. It works by

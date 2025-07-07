@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Tests for some helper routines.
+"""Tests for some helper routines.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020

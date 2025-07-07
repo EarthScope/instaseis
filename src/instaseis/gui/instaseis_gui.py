@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Graphical user interface for Instaseis.
+"""Graphical user interface for Instaseis.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020

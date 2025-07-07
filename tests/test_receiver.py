@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Tests for the receiver handling.
+"""Tests for the receiver handling.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
@@ -22,9 +21,7 @@ DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 
 def test_parse_stations_file(tmpdir):
-    """
-    Tests parsing from a STATIONS file. tmpdir is a pytest fixture.
-    """
+    """Tests parsing from a STATIONS file. tmpdir is a pytest fixture."""
     filename = os.path.join(tmpdir.dirname, "STATIONS")
     lines = (
         "AAK        II       10.     20.   1645.0    30.0",
@@ -173,8 +170,7 @@ def test_parse_obspy_waveform_objects():
 
 
 def test_duplicate_receivers():
-    """
-    Many waveform files contain multiple channels of the same stations. Of
+    """Many waveform files contain multiple channels of the same stations. Of
     course these duplicates need to be purged.
     """
     filename = os.path.join(DATA, "example.sac")
@@ -229,9 +225,7 @@ def test_station_x_y_z():
 
 
 def test_str_method_of_receiver():
-    """
-    Tests the string method of the receiver class.
-    """
+    """Tests the string method of the receiver class."""
     rec = Receiver(latitude=1.0, longitude=2.0, network="BW", station="ALTM")
     assert str(rec) == (
         "Instaseis Receiver:\n"
@@ -244,9 +238,7 @@ def test_str_method_of_receiver():
 
 
 def test_error_handling_when_parsing_station_files(tmpdir):
-    """
-    Tests error handling when parsing station files.
-    """
+    """Tests error handling when parsing station files."""
     # Differing coordinates for channels of the same station.
     inv = obspy.read_inventory()
     with pytest.raises(ReceiverParseError) as err:
@@ -301,9 +293,7 @@ def test_error_handling_when_parsing_station_files(tmpdir):
 
 
 def test_invalid_lat_lng_values():
-    """
-    Tests invalid latitude/longitude values
-    """
+    """Tests invalid latitude/longitude values."""
     Receiver(latitude=10, longitude=10)
 
     with pytest.raises(ValueError):

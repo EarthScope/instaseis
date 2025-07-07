@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Tests for the finite source route of the Instaseis server.
+"""Tests for the finite source route of the Instaseis server.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
@@ -41,9 +40,7 @@ USGS_PARAM_FILE_LONG = os.path.join(DATA, "long_source.param")
 
 
 def fetch_sync(client, url, **kwargs):
-    """
-    Helper function to call an async test client in a sync test case.
-    """
+    """Helper function to call an async test client in a sync test case."""
 
     async def f():
         try:
@@ -58,8 +55,7 @@ def fetch_sync(client, url, **kwargs):
 
 
 def _parse_finite_source(filename):
-    """
-    Helper function parsing a finite source exactly how it is parsed in the
+    """Helper function parsing a finite source exactly how it is parsed in the
     finite source server route.
     """
     fs = instaseis.FiniteSource.from_usgs_param_file(
@@ -87,9 +83,7 @@ def _parse_finite_source(filename):
 
 
 def test_triggering_random_error_during_parsing(reciprocal_clients):
-    """
-    Tests triggering a random error during the USGS param file parsing.
-    """
+    """Tests triggering a random error during the USGS param file parsing."""
     client = reciprocal_clients
 
     with io.open(__file__) as fh:
@@ -114,9 +108,7 @@ def test_triggering_random_error_during_parsing(reciprocal_clients):
 
 
 def test_sending_non_usgs_file(reciprocal_clients):
-    """
-    Tests error if a non-USGS file is sent.
-    """
+    """Tests error if a non-USGS file is sent."""
     client = reciprocal_clients
 
     with io.open(__file__) as fh:
@@ -140,8 +132,7 @@ def test_sending_non_usgs_file(reciprocal_clients):
 
 @pytest.mark.parametrize("usgs_param", [USGS_PARAM_FILE_1, USGS_PARAM_FILE_2])
 def test_finite_source_retrieval(reciprocal_clients, usgs_param):
-    """
-    Tests if the finite sources requested from the server are identical to
+    """Tests if the finite sources requested from the server are identical to
     the one requested with the local instaseis client with some required
     tweaks.
     """
@@ -441,8 +432,7 @@ def test_finite_source_retrieval(reciprocal_clients, usgs_param):
 
 @pytest.mark.parametrize("usgs_param", [USGS_PARAM_FILE_1, USGS_PARAM_FILE_2])
 def test_more_complex_queries(reciprocal_clients_all_callbacks, usgs_param):
-    """
-    These are not exhaustive tests but test that the queries do something.
+    """These are not exhaustive tests but test that the queries do something.
     Elsewhere they are tested in more details.
 
     Test phase relative offsets.
@@ -577,9 +567,7 @@ def test_more_complex_queries(reciprocal_clients_all_callbacks, usgs_param):
 def test_various_failure_conditions(
     reciprocal_clients_all_callbacks, usgs_param
 ):
-    """
-    Tests some failure conditions.
-    """
+    """Tests some failure conditions."""
     client = reciprocal_clients_all_callbacks
 
     basic_parameters = {
@@ -716,9 +704,7 @@ def test_various_failure_conditions(
 
 
 def test_uploading_empty_usgs_file(reciprocal_clients):
-    """
-    Tests uploading an empty usgs file.
-    """
+    """Tests uploading an empty usgs file."""
     client = reciprocal_clients
 
     params = {
@@ -746,8 +732,7 @@ def test_uploading_empty_usgs_file(reciprocal_clients):
 
 
 def test_uploading_deep_usgs_file(reciprocal_clients):
-    """
-    Tests uploading a usgs file that has sources that are too deep for the
+    """Tests uploading a usgs file that has sources that are too deep for the
     database.
     """
     client = reciprocal_clients
@@ -778,8 +763,7 @@ def test_uploading_deep_usgs_file(reciprocal_clients):
 
 
 def test_uploading_usgs_file_with_airquakes(reciprocal_clients):
-    """
-    Tests uploading a usgs file that has sources that are above the planet
+    """Tests uploading a usgs file that has sources that are above the planet
     radius.
     """
     client = reciprocal_clients
@@ -811,8 +795,7 @@ def test_uploading_usgs_file_with_airquakes(reciprocal_clients):
 
 
 def test_uploading_usgs_file_with_long_rise_or_fall_times(reciprocal_clients):
-    """
-    Tests uploading a usgs file that has too long rise or fall times.
+    """Tests uploading a usgs file that has too long rise or fall times.
     radius.
     """
     client = reciprocal_clients
@@ -844,9 +827,7 @@ def test_uploading_usgs_file_with_long_rise_or_fall_times(reciprocal_clients):
 
 
 def test_uploading_file_with_too_many_sources(reciprocal_clients):
-    """
-    Tests uploading a file with too many point sources.
-    """
+    """Tests uploading a file with too many point sources."""
     client = reciprocal_clients
 
     # Artificially limit the number of allowed sources.

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Numba translations for some functions from the spectral_basis module from
+"""Numba translations for some functions from the spectral_basis module from
 AxiSEM's kernel module.
 
 :copyright:
@@ -20,8 +19,7 @@ from numba import njit
 
 @njit(cache=instaseis._use_numba_cache)
 def lagrange_interpol_2D_td(points1, points2, coefficients, x1, x2):
-    """
-    Computes the 2D Lagrange interpolation for time-dependent coefficients.
+    """Computes the 2D Lagrange interpolation for time-dependent coefficients.
 
     This function performs a 2D Lagrange interpolation on a grid defined by
     `points1` and `points2`. The `coefficients` are given for each point
@@ -48,6 +46,7 @@ def lagrange_interpol_2D_td(points1, points2, coefficients, x1, x2):
     np.ndarray
         1D array of interpolated values, one for each time sample.
         The length of the array is `nsamp`.
+
     """
     n1 = len(points1) - 1
     n2 = len(points2) - 1

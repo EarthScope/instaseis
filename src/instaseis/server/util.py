@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-:copyright:
+""":copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
 :license:
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
-    (http://www.gnu.org/copyleft/lgpl.html)
+    (http://www.gnu.org/copyleft/lgpl.html).
 """
 
 import io
@@ -32,8 +31,8 @@ PHASE_OFFSET_PATTERN = re.compile(r"(^[A-Za-z0-9^]+)([\+-])([\deE\.\-\+]+$)")
 
 
 class IOQueue(object):
-    """
-    Object passed to the zipfile constructor which acts as a file-like object.
+
+    """Object passed to the zipfile constructor which acts as a file-like object.
 
     Iterating over the object yields the data pieces written to it since it
     has last been iterated over DELETING those pieces at the end of each
@@ -86,8 +85,7 @@ def _validtimesetting(value):
 
 
 def _format_utc_datetime(dt):
-    """
-    Python 2's datetime class cannot format dates before 1900. Thus we do it
+    """Python 2's datetime class cannot format dates before 1900. Thus we do it
     like this which yields the same result.
     """
     return dt.datetime.isoformat() + "Z"
@@ -298,8 +296,7 @@ def _validate_and_write_waveforms(
 
 
 def get_gaussian_source_time_function(source_width, dt):
-    """
-    Returns a gaussian source time function.
+    """Returns a gaussian source time function.
 
     :type source_width: float
     :param source_width: The desired source width in seconds. This is twice

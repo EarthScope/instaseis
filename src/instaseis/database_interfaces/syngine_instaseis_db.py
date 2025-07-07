@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Instaseis database class for remote access using the syngine service of IRIS.
+"""Instaseis database class for remote access using the syngine service of IRIS.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
@@ -44,9 +43,8 @@ HEADERS = {"User-Agent": USER_AGENT, "Accept-Encoding": "gzip,deflate"}
 
 
 class SyngineInstaseisDB(BaseInstaseisDB):
-    """
-    Remote Instaseis interface connecting with IRIS' syngine service.
-    """
+
+    """Remote Instaseis interface connecting with IRIS' syngine service."""
 
     def __init__(
         self,
@@ -56,8 +54,7 @@ class SyngineInstaseisDB(BaseInstaseisDB):
         *args,
         **kwargs,
     ):
-        """
-        :param model: The model to use.
+        """:param model: The model to use.
         :type model: str
         :param base_url: URL to the root of the syngine service.
         :type base_url: str
@@ -77,8 +74,7 @@ class SyngineInstaseisDB(BaseInstaseisDB):
         )
 
     def _get_seismograms(self, source, receiver, components=("Z", "N", "E")):
-        """
-        Extract seismograms.
+        """Extract seismograms.
 
         :param source: instaseis.Source or instaseis.ForceSource object
         :type source: :class:`instaseis.source.Source` or
@@ -210,9 +206,7 @@ class SyngineInstaseisDB(BaseInstaseisDB):
         return url
 
     def _download_url(self, url, unpack_json=False):
-        """
-        Helper function downloading data from a URL.
-        """
+        """Helper function downloading data from a URL."""
         if self.debug:  # pragma: no cover
             print("Downloading '%s' ..." % url)
         r = requests.get(url, headers=HEADERS)
@@ -234,8 +228,7 @@ class SyngineInstaseisDB(BaseInstaseisDB):
             return r.text
 
     def _get_info(self):
-        """
-        Returns a dictionary with information about the currently loaded
+        """Returns a dictionary with information about the currently loaded
         database.
         """
         info = self._download_url(

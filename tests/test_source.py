@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Tests for source handling.
+"""Tests for source handling.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
@@ -40,9 +39,7 @@ USGS_PARAM_FILE_EMPTY = os.path.join(DATA, "empty.param")
 
 
 def test_parse_cmtsolutions_file(tmpdir):
-    """
-    Tests parsing from a CMTSOLUTIONS file.
-    """
+    """Tests parsing from a CMTSOLUTIONS file."""
     filename = os.path.join(str(tmpdir), "CMTSOLUTIONS")
     lines = (
         " PDE 2011  8 23 17 51  4.60  37.9400  -77.9300   6.0 5.9 5.8 "
@@ -105,9 +102,7 @@ def test_parse_cmtsolutions_file(tmpdir):
 
 
 def _assert_src(src):
-    """
-    We constantly test the same event in various configurations.
-    """
+    """We constantly test the same event in various configurations."""
     # Latitude will have been assumed to be WGS84 and converted to geocentric!
     assert (
         src.latitude,
@@ -136,17 +131,13 @@ def _assert_src(src):
 
 
 def test_parse_quakeml():
-    """
-    Tests parsing from a QuakeML file.
-    """
+    """Tests parsing from a QuakeML file."""
     src = Source.parse(EVENT_FILE)
     _assert_src(src)
 
 
 def test_parse_obspy_objects():
-    """
-    Tests parsing from ObsPy objects.
-    """
+    """Tests parsing from ObsPy objects."""
     cat = obspy.read_events(EVENT_FILE)
     ev = cat[0]
 
@@ -155,9 +146,7 @@ def test_parse_obspy_objects():
 
 
 def test_parse_srf_file(tmpdir):
-    """
-    Tests parsing from a .srf file.
-    """
+    """Tests parsing from a .srf file."""
     finitesource = FiniteSource.from_srf_file(SRF_FILE, True)
     assert finitesource.npointsources == 10
     longitudes = np.array(
@@ -217,9 +206,7 @@ def test_parse_srf_file(tmpdir):
 
 
 def test_parsing_empty_usgs_file():
-    """
-    Parsing an empty USGS file should fail.
-    """
+    """Parsing an empty USGS file should fail."""
     with pytest.raises(USGSParamFileParsingException) as e:
         FiniteSource.from_usgs_param_file(USGS_PARAM_FILE_EMPTY)
 
@@ -227,9 +214,7 @@ def test_parsing_empty_usgs_file():
 
 
 def test_parse_usgs_param_file():
-    """
-    Tests parsing from a .param file.
-    """
+    """Tests parsing from a .param file."""
     # single segment file
     finitesource = FiniteSource.from_usgs_param_file(USGS_PARAM_FILE1)
     np.testing.assert_almost_equal(finitesource.moment_magnitude, 7.87077609)
@@ -244,9 +229,7 @@ def test_parse_usgs_param_file():
 
 
 def test_parse_usgs_param_file_from_bytes_io_and_open_files():
-    """
-    Tests parsing a USGS file from a BytesIO stream and open files..
-    """
+    """Tests parsing a USGS file from a BytesIO stream and open files.."""
     with io.open(USGS_PARAM_FILE1, "rb") as fh:
         finitesource = FiniteSource.from_usgs_param_file(fh)
     np.testing.assert_almost_equal(
@@ -277,9 +260,7 @@ def test_parse_usgs_param_file_from_bytes_io_and_open_files():
 
 
 def test_haskell():
-    """
-    Tests Haskell source.
-    """
+    """Tests Haskell source."""
     latitude, longitude, depth_in_m = 89.9999, 0.0, 10000.0
     strike, dip, rake = 90.0, 90.0, 0.0
     M0 = 1e20  # NOQA
@@ -345,9 +326,7 @@ def test_haskell():
 
 
 def test_resample_stf():
-    """
-    Tests resampling sliprates
-    """
+    """Tests resampling sliprates."""
     finitesource = FiniteSource.from_srf_file(SRF_FILE, True)
     finitesource.resample_sliprate(dt=1.0, nsamp=10)
 
@@ -371,9 +350,7 @@ def test_resample_stf():
 
 
 def test_hypocenter():
-    """
-    Tests finding the hypocenter
-    """
+    """Tests finding the hypocenter."""
     finitesource = FiniteSource.from_srf_file(SRF_FILE, True)
     finitesource.find_hypocenter()
 
@@ -385,9 +362,7 @@ def test_hypocenter():
 
 
 def test_min_max_functions():
-    """
-    Tests the min/max convenience functions
-    """
+    """Tests the min/max convenience functions."""
     finitesource = FiniteSource.from_srf_file(SRF_FILE, True)
     finitesource.find_hypocenter()
 
@@ -404,9 +379,7 @@ def test_min_max_functions():
 
 
 def test_m0():
-    """
-    Tests computation of scalar Moment.
-    """
+    """Tests computation of scalar Moment."""
     strike = 10.0
     dip = 20.0
     rake = 30.0
@@ -417,9 +390,7 @@ def test_m0():
 
 
 def test_moment2magnitude():
-    """
-    Tests computation of magnitude
-    """
+    """Tests computation of magnitude."""
     m0 = 1e22
     mw = moment2magnitude(m0)
     m0_calc = magnitude2moment(mw)
@@ -428,9 +399,7 @@ def test_moment2magnitude():
 
 
 def test_m0_finite_source():
-    """
-    Tests computation of scalar Moment.
-    """
+    """Tests computation of scalar Moment."""
     finitesource = FiniteSource.from_srf_file(SRF_FILE, True)
     finitesource.find_hypocenter()
 
@@ -438,9 +407,7 @@ def test_m0_finite_source():
 
 
 def test_cmt_finite_source():
-    """
-    Tests computation of CMT solution
-    """
+    """Tests computation of CMT solution."""
     finitesource = FiniteSource.from_srf_file(SRF_FILE, True)
     finitesource.compute_centroid()
     expected = np.array(
@@ -466,9 +433,7 @@ def test_cmt_finite_source():
 
 
 def test_fault_vectors_lmn():
-    """
-    Tests computation of fault vectors l, m and n
-    """
+    """Tests computation of fault vectors l, m and n."""
     strike, dip, rake = 35.0, 70.0, 17.0
     _l, m, n = fault_vectors_lmn(strike, dip, rake)
 
@@ -492,9 +457,7 @@ def test_fault_vectors_lmn():
 
 
 def test_strike_dip_rake_from_ln():
-    """
-    Tests computation of strike dip and rake from fault vectors l and n
-    """
+    """Tests computation of strike dip and rake from fault vectors l and n."""
     for strike, dip, rake in zip(
         (42.0, 180.0, -140.0), (22.0, 0.0, 90.0), (17.0, 32.0, 120.0)
     ):
@@ -507,8 +470,7 @@ def test_strike_dip_rake_from_ln():
 
 
 def test_equality_methods():
-    """
-    Tests the (in)equality methods of source and receiver objects. They both
+    """Tests the (in)equality methods of source and receiver objects. They both
     inherit from the same base class thus they are tested here - but it
     would also be suitable for the receiver tests.
     """
@@ -548,9 +510,7 @@ def test_radian_calculations():
 
 
 def test_event_parsing_failure_states():
-    """
-    Tests the failures when parsing an event.
-    """
+    """Tests the failures when parsing an event."""
     # Random string.
     with pytest.raises(SourceParseError) as err:
         Source.parse("random strings")
@@ -597,9 +557,7 @@ def test_event_parsing_failure_states():
 
 
 def test_sliprate_convenience_methods():
-    """
-    Tests some convenience methods of sliprates.
-    """
+    """Tests some convenience methods of sliprates."""
     src = Source(latitude=0.0, longitude=90.0)
     src.set_sliprate_dirac(2.0, 5)
     np.testing.assert_allclose(np.array([0.5, 0, 0, 0, 0]), src.sliprate)
@@ -620,9 +578,7 @@ def test_sliprate_convenience_methods():
 
 
 def test_sliprate_convenience_methods_finite_source():
-    """
-    Tests some convenience methods of sliprates for finite sources.
-    """
+    """Tests some convenience methods of sliprates for finite sources."""
     src = Source(latitude=0.0, longitude=90.0)
     fs = FiniteSource(pointsources=[src])
     fs.set_sliprate_dirac(2.0, 5)
@@ -646,9 +602,7 @@ def test_sliprate_convenience_methods_finite_source():
 
 
 def test_sliprate_convenience_methods_force_source():
-    """
-    Tests some convenience methods of sliprates for force sources.
-    """
+    """Tests some convenience methods of sliprates for force sources."""
     src = ForceSource(latitude=0.0, longitude=90.0)
     src.set_sliprate_dirac(2.0, 5)
     np.testing.assert_allclose(np.array([0.5, 0, 0, 0, 0]), src.sliprate)
@@ -722,17 +676,14 @@ def test_str_method_of_finite_source():
 
 
 def test_properties_force_source():
-    """
-    Tests some properties of the force source.
-    """
+    """Tests some properties of the force source."""
     src = ForceSource(latitude=0.0, longitude=0.0, f_r=1.0, f_t=2.0, f_p=3.0)
     np.testing.assert_allclose(src.force_tpr, [2.0, 3.0, 1.0])
     np.testing.assert_allclose(src.force_rtp, [1.0, 2.0, 3.0])
 
 
 def test_finite_source_iteration_over_empty_fs():
-    """
-    Raises a ValueError when trying to iterate over an empty finite source
+    """Raises a ValueError when trying to iterate over an empty finite source
     object. This is safe-guard against obvious errors so in this particular
     case its better to be explicit instead of just not looping.
     """
@@ -743,9 +694,7 @@ def test_finite_source_iteration_over_empty_fs():
 
 
 def test_reading_finite_source_with_slip_along_u2_axis():
-    """
-    Tests SRF files with slips along the u2 axis with a constructed file.
-    """
+    """Tests SRF files with slips along the u2 axis with a constructed file."""
     # Constructed file with known properties.
     filename = os.path.join(DATA, "strike_slip_eq_2pts.srf")
     finitesource = FiniteSource.from_srf_file(filename, True)
@@ -753,9 +702,7 @@ def test_reading_finite_source_with_slip_along_u2_axis():
 
 
 def test_print_regressions():
-    """
-    Guard against a regression for printing a source object.
-    """
+    """Guard against a regression for printing a source object."""
     src = Source.from_strike_dip_rake(
         latitude=27.77,
         longitude=85.37,

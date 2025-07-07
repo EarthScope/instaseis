@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Source and Receiver classes of Instaseis.
+"""Source and Receiver classes of Instaseis.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
@@ -31,16 +30,14 @@ DEFAULT_MU = 32e9
 
 
 class USGSParamFileParsingException(Exception):
-    """
-    Custom exception for nice and hopefully save exception passing.
-    """
+
+    """Custom exception for nice and hopefully save exception passing."""
 
     pass
 
 
 def _purge_duplicates(f):
-    """
-    Simple decorator removing duplicates in the returned list. Preserves the
+    """Simple decorator removing duplicates in the returned list. Preserves the
     order and will remove duplicates occuring later in the list.
     """
 
@@ -58,8 +55,7 @@ def _purge_duplicates(f):
 
 
 def moment2magnitude(M0):  # NOQA
-    """
-    Convert seismic moment M0 to moment magnitude Mw
+    """Convert seismic moment M0 to moment magnitude Mw.
 
     :param M0: seismic moment in Nm
     :type M0: float
@@ -72,8 +68,7 @@ def moment2magnitude(M0):  # NOQA
 
 
 def magnitude2moment(Mw):  # NOQA
-    """
-    Convert moment magnitude Mw to seismic moment M0
+    """Convert moment magnitude Mw to seismic moment M0.
 
     :param Mw: moment magnitude
     :type Mw: float
@@ -84,9 +79,8 @@ def magnitude2moment(Mw):  # NOQA
 
 
 def fault_vectors_lmn(strike, dip, rake):
-    """
-    compute vectors l, m = n x l and n describing the fault according to Udias
-    Fig. 16.19
+    """Compute vectors l, m = n x l and n describing the fault according to Udias
+    Fig. 16.19.
 
     :param strike: strike of the fault measured from North
     :type strike: float
@@ -137,9 +131,8 @@ def fault_vectors_lmn(strike, dip, rake):
 
 
 def strike_dip_rake_from_ln(l, n):  # NOQA
-    """
-    compute strike, dip and rake from the fault vectors l and n
-    describing the fault according to Udias Fig. 16.19
+    """Compute strike, dip and rake from the fault vectors l and n
+    describing the fault according to Udias Fig. 16.19.
 
     :return (strike, dip, rake): strike, dip and rake
     :type (strike, dip, rake): tuple of floats
@@ -173,8 +166,7 @@ def strike_dip_rake_from_ln(l, n):  # NOQA
 
 
 def asymmetric_cosine(trise, tfall=None, npts=10000, dt=0.1):
-    """
-    Initialize a source time function with asymmetric cosine, normalized to 1
+    """Initialize a source time function with asymmetric cosine, normalized to 1.
 
     :param trise: rise time
     :type trise: float
@@ -273,8 +265,7 @@ class SourceOrReceiver(object):
 
 class SourceTimeFunction(object):
     def set_sliprate(self, sliprate, dt, time_shift=None, normalize=True):
-        """
-        Add a source time function (sliprate) to a initialized source object.
+        """Add a source time function (sliprate) to a initialized source object.
 
         :param sliprate: (normalized) sliprate
         :param dt: sampling of the sliprate
@@ -288,8 +279,7 @@ class SourceTimeFunction(object):
         self.time_shift = time_shift
 
     def resample_sliprate(self, dt, nsamp):
-        """
-        For convolution, the sliprate is needed at the sampling of the fields
+        """For convolution, the sliprate is needed at the sampling of the fields
         in the database. This function resamples the sliprate using linear
         interpolation.
 
@@ -305,8 +295,7 @@ class SourceTimeFunction(object):
         self.dt = dt
 
     def set_sliprate_dirac(self, dt, nsamp):
-        """
-        :param dt: desired sampling
+        """:param dt: desired sampling
         :param nsamp: desired number of samples
         """
         self.sliprate = np.zeros(nsamp)
@@ -314,8 +303,7 @@ class SourceTimeFunction(object):
         self.dt = dt
 
     def set_sliprate_lp(self, dt, nsamp, freq, corners=4, zerophase=False):
-        """
-        :param dt: desired sampling
+        """:param dt: desired sampling
         :param nsamp: desired number of samples
         """
         self.sliprate = np.zeros(nsamp)
@@ -326,9 +314,7 @@ class SourceTimeFunction(object):
         self.dt = dt
 
     def normalize_sliprate(self):
-        """
-        normalize the sliprate using trapezoidal rule
-        """
+        """Normalize the sliprate using trapezoidal rule."""
         self.sliprate /= np.trapezoid(self.sliprate, dx=self.dt)
 
     def lp_sliprate(self, freq, corners=4, zerophase=False):
@@ -338,8 +324,8 @@ class SourceTimeFunction(object):
 
 
 class Source(SourceOrReceiver, SourceTimeFunction):
-    """
-    Class to handle a seismic moment tensor source including a source time
+
+    """Class to handle a seismic moment tensor source including a source time
     function.
     """
 
@@ -359,8 +345,7 @@ class Source(SourceOrReceiver, SourceTimeFunction):
         dt=None,
         origin_time=obspy.UTCDateTime(0),
     ):
-        """
-        :param latitude: geocentric latitude of the source in degree
+        """:param latitude: geocentric latitude of the source in degree
         :param longitude: longitude of the source in degree
         :param depth_in_m: source depth in m
         :param m_rr: moment tensor components in r, theta, phi in Nm
@@ -414,8 +399,7 @@ class Source(SourceOrReceiver, SourceTimeFunction):
 
     @staticmethod
     def parse(filename_or_obj):
-        """
-        Attempts to parse anything to a Source object. Can currently read
+        """Attempts to parse anything to a Source object. Can currently read
         anything ObsPy can read, ObsPy event related objects.
 
         For anything ObsPy related, it must contain a full moment tensor,
@@ -512,8 +496,7 @@ class Source(SourceOrReceiver, SourceTimeFunction):
         dt=None,
         origin_time=obspy.UTCDateTime(0),
     ):
-        """
-        Initialize a source object from a shear source parameterized by strike,
+        """Initialize a source object from a shear source parameterized by strike,
         dip and rake.
 
         :param latitude: geocentric latitude of the source in degree
@@ -617,9 +600,7 @@ class Source(SourceOrReceiver, SourceTimeFunction):
 
     @property
     def M0(self):  # NOQA
-        """
-        Scalar Moment M0 in Nm
-        """
+        """Scalar Moment M0 in Nm."""
         return (
             self.m_rr**2
             + self.m_tt**2
@@ -631,16 +612,13 @@ class Source(SourceOrReceiver, SourceTimeFunction):
 
     @property
     def moment_magnitude(self):
-        """
-        Moment magnitude M_w
-        """
+        """Moment magnitude M_w."""
         return moment2magnitude(self.M0)
 
     @property
     def tensor(self):
-        """
-        List of moment tensor components in r, theta, phi coordinates:
-        [m_rr, m_tt, m_pp, m_rt, m_rp, m_tp]
+        """List of moment tensor components in r, theta, phi coordinates:
+        [m_rr, m_tt, m_pp, m_rt, m_rp, m_tp].
         """
         return np.array(
             [self.m_rr, self.m_tt, self.m_pp, self.m_rt, self.m_rp, self.m_tp]
@@ -648,10 +626,9 @@ class Source(SourceOrReceiver, SourceTimeFunction):
 
     @property
     def tensor_voigt(self):
-        """
-        List of moment tensor components in theta, phi, r coordinates in Voigt
+        """List of moment tensor components in theta, phi, r coordinates in Voigt
         notation:
-        [m_tt, m_pp, m_rr, m_rp, m_rt, m_tp]
+        [m_tt, m_pp, m_rr, m_rp, m_rt, m_tp].
         """
         return np.array(
             [self.m_tt, self.m_pp, self.m_rr, self.m_rp, self.m_rt, self.m_tp]
@@ -682,8 +659,8 @@ class Source(SourceOrReceiver, SourceTimeFunction):
 
 
 class ForceSource(SourceOrReceiver, SourceTimeFunction):
-    """
-    Class to handle a seismic force source.
+
+    """Class to handle a seismic force source.
 
     :param latitude: geocentric latitude of the source in degree
     :param longitude: longitude of the source in degree
@@ -725,8 +702,7 @@ class ForceSource(SourceOrReceiver, SourceTimeFunction):
         time_shift=None,
         dt=None,
     ):
-        """
-        :param latitude: geocentric latitude of the source in degree
+        """:param latitude: geocentric latitude of the source in degree
         :param longitude: longitude of the source in degree
         :param depth_in_m: source depth in m
         :param f_r: force components in r, theta, phi in N
@@ -754,17 +730,15 @@ class ForceSource(SourceOrReceiver, SourceTimeFunction):
 
     @property
     def force_tpr(self):
-        """
-        List of force components in theta, phi, r coordinates:
-        [f_t, f_p, f_r]
+        """List of force components in theta, phi, r coordinates:
+        [f_t, f_p, f_r].
         """
         return np.array([self.f_t, self.f_p, self.f_r])
 
     @property
     def force_rtp(self):
-        """
-        List of force components in r, theta, phi, coordinates:
-        [f_r, f_t, f_p]
+        """List of force components in r, theta, phi, coordinates:
+        [f_r, f_t, f_p].
         """
         return np.array([self.f_r, self.f_t, self.f_p])
 
@@ -781,8 +755,8 @@ class ForceSource(SourceOrReceiver, SourceTimeFunction):
 
 
 class Receiver(SourceOrReceiver):
-    """
-    Class dealing with seismic receivers.
+
+    """Class dealing with seismic receivers.
 
     :type latitude: float
     :param latitude: The geocentric latitude of the receiver in degree.
@@ -846,8 +820,7 @@ class Receiver(SourceOrReceiver):
     @staticmethod
     @_purge_duplicates
     def parse(filename_or_obj, network_code=None):
-        """
-        Attempts to parse anything to a list of
+        """Attempts to parse anything to a list of
         :class:`~instaseis.source.Receiver` objects. Always
         returns a list, even if it only contains a single element. It is
         meant as a single entry point for receiver information from any source.
@@ -1015,8 +988,7 @@ class Receiver(SourceOrReceiver):
 
     @staticmethod
     def _parse_stations_file(filename):
-        """
-        Parses a custom STATIONS file format to a list of Receiver objects.
+        """Parses a custom STATIONS file format to a list of Receiver objects.
 
         Coordinates are assumed to be defined on the WGS84 ellipsoid and
         will be converted to geocentric coordinates.
@@ -1037,8 +1009,8 @@ class Receiver(SourceOrReceiver):
 
 
 class FiniteSource(object):
-    """
-    A class to handle finite sources represented by a number of point sources.
+
+    """A class to handle finite sources represented by a number of point sources.
 
     :param pointsources: The points sources making up the finite source.
     :type pointsources: list of :class:`~instaseis.source.Source` objects
@@ -1082,9 +1054,7 @@ class FiniteSource(object):
         return self
 
     def next(self):  # pragma: no cover
-        """
-        For Py2K compat.
-        """
+        """For Py2K compat."""
         return self.__next__()
 
     def __next__(self):
@@ -1102,9 +1072,8 @@ class FiniteSource(object):
 
     @classmethod
     def from_srf_file(cls, filename, normalize=False):
-        """
-        Initialize a finite source object from a 'standard rupture format'
-        (.srf) file
+        """Initialize a finite source object from a 'standard rupture format'
+        (.srf) file.
 
         Coordinates are assumed to be defined on the WGS84 ellipsoid and
         will be converted to geocentric coordinates.
@@ -1221,9 +1190,8 @@ class FiniteSource(object):
     def from_usgs_param_file(
         cls, filename_or_obj, npts=10000, dt=0.1, trise_min=1.0
     ):
-        """
-        Initialize a finite source object from a (.param) file available from
-        the USGS website
+        """Initialize a finite source object from a (.param) file available from
+        the USGS website.
 
         Coordinates are assumed to be defined on the WGS84 ellipsoid and
         will be converted to geocentric coordinates.
@@ -1274,8 +1242,7 @@ class FiniteSource(object):
 
     @classmethod
     def _from_usgs_param_file(cls, fh, npts, dt, trise_min):
-        """
-        Internal function actually reading a USGS param file from any open
+        """Internal function actually reading a USGS param file from any open
         binary buffer.
         """
         # number of segments
@@ -1390,8 +1357,7 @@ class FiniteSource(object):
         planet_radius=6371e3,
         origin_time=obspy.UTCDateTime(0),
     ):
-        """
-        Initialize a source object from a shear source parameterized by strike,
+        """Initialize a source object from a shear source parameterized by strike,
         dip and rake.
 
         :param latitude: geocentric latitude of the source centroid in degree
@@ -1534,8 +1500,7 @@ class FiniteSource(object):
         return self(pointsources=sources)
 
     def resample_sliprate(self, dt, nsamp):
-        """
-        For convolution, the sliprate is needed at the sampling of the fields
+        """For convolution, the sliprate is needed at the sampling of the fields
         in the database. This function resamples the sliprate using linear
         interpolation for all pointsources in the finite source.
 
@@ -1546,25 +1511,21 @@ class FiniteSource(object):
             ps.resample_sliprate(dt, nsamp)
 
     def set_sliprate_dirac(self, dt, nsamp):
-        """
-        :param dt: desired sampling
+        """:param dt: desired sampling
         :param nsamp: desired number of samples
         """
         for ps in self.pointsources:
             ps.set_sliprate_dirac(dt, nsamp)
 
     def set_sliprate_lp(self, dt, nsamp, freq, corners=4, zerophase=False):
-        """
-        :param dt: desired sampling
+        """:param dt: desired sampling
         :param nsamp: desired number of samples
         """
         for ps in self.pointsources:
             ps.set_sliprate_lp(dt, nsamp, freq, corners, zerophase)
 
     def normalize_sliprate(self):
-        """
-        normalize the sliprate using trapezoidal rule
-        """
+        """Normalize the sliprate using trapezoidal rule."""
         for ps in self.pointsources:
             ps.normalize_sliprate()
 
@@ -1573,9 +1534,8 @@ class FiniteSource(object):
             ps.lp_sliprate(freq, corners, zerophase)
 
     def find_hypocenter(self):
-        """
-        Finds the hypo- and epicenter based on the point source that has the
-        smallest timeshift
+        """Finds the hypo- and epicenter based on the point source that has the
+        smallest timeshift.
         """
         ps_hypo = min(self.pointsources, key=lambda x: x.time_shift)
         self.hypocenter_longitude = ps_hypo.longitude
@@ -1583,9 +1543,8 @@ class FiniteSource(object):
         self.hypocenter_depth_in_m = ps_hypo.depth_in_m
 
     def compute_centroid(self, planet_radius=6371e3, dt=None, nsamp=None):
-        """
-        computes the centroid moment tensor by summing over all pointsource
-        weihted by their scalar moment
+        """Computes the centroid moment tensor by summing over all pointsource
+        weihted by their scalar moment.
         """
         x = 0.0
         y = 0.0
@@ -1657,16 +1616,12 @@ class FiniteSource(object):
 
     @property
     def M0(self):  # NOQA
-        """
-        Scalar Moment M0 in Nm
-        """
+        """Scalar Moment M0 in Nm."""
         return sum(ps.M0 for ps in self.pointsources)
 
     @property
     def moment_magnitude(self):
-        """
-        Moment magnitude M_w
-        """
+        """Moment magnitude M_w."""
         return moment2magnitude(self.M0)
 
     @property

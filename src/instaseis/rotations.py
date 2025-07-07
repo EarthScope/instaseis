@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Functions dealing with rotations.
+"""Functions dealing with rotations.
 
 :copyright:
     Martin van Driel (Martin@vanDriel.de), 2020
@@ -38,10 +37,9 @@ def rotate_frame_rd(x, y, z, phi, theta):
 
 
 def rotate_symm_tensor_voigt_xyz_earth_to_xyz_src(mt, phi, theta):
-    """
-    rotates a tensor from a cartesian system xyz with z axis aligned with the
+    """Rotates a tensor from a cartesian system xyz with z axis aligned with the
     north pole to a cartesian system x,y,z where z is aligned with the source /
-    receiver
+    receiver.
 
     input symmetric tensor in voigt notation:
     A = {{a1, a6, a5}, {a6, a2, a4}, {a5, a4, a3}};
@@ -84,10 +82,9 @@ def rotate_symm_tensor_voigt_xyz_earth_to_xyz_src(mt, phi, theta):
 
 
 def rotate_symm_tensor_voigt_xyz_src_to_xyz_earth(mt, phi, theta):
-    """
-    rotates a tensor from a cartesian system xyz with z axis aligned with the
+    """Rotates a tensor from a cartesian system xyz with z axis aligned with the
     source / receiver to a cartesian system x,y,z where z is aligned with the
-    north pole
+    north pole.
 
     input symmetric tensor in voigt notation:
     A = {{a1, a6, a5}, {a6, a2, a4}, {a5, a4, a3}};
@@ -119,10 +116,9 @@ def rotate_symm_tensor_voigt_xyz_src_to_xyz_earth(mt, phi, theta):
 
 
 def rotate_symm_tensor_voigt_xyz_to_src(mt, phi):
-    """
-    rotates a tensor from a cartesian system x,y,z where z is aligned with the
+    """Rotates a tensor from a cartesian system x,y,z where z is aligned with the
     source and x with phi = 0 to the AxiSEM s, phi, z system aligned with the
-    source on the s = 0 axis
+    source on the s = 0 axis.
 
     input symmetric tensor in voigt notation:
     A = {{a1, a6, a5}, {a6, a2, a4}, {a5, a4, a3}};
@@ -222,9 +218,8 @@ def rotate_vector_xyz_src_to_xyz_rec(vec, srclon, srccolat, reclon, reccolat):
 def coord_transform_lat_lon_depth_to_xyz(
     latitude, longitude, depth_in_m, planet_radius=6371e3
 ):
-    """
-    Tansform coordinates from latitude, longitude, depth to global cartesian
-    coordinates with z aligned with northpole
+    """Tansform coordinates from latitude, longitude, depth to global cartesian
+    coordinates with z aligned with northpole.
     """
     longitude_rad = np.radians(longitude)
     latitude_rad = np.radians(latitude)
@@ -246,11 +241,9 @@ def coord_transform_lat_lon_depth_to_xyz(
 
 
 def coord_transform_xyz_to_lat_lon_depth(x, y, z, planet_radius=6371e3):
+    """Tansform coordinates from global cartesian coordinates with z aligned with
+    northpole to latitude, longitude, depth.
     """
-    Tansform coordinates from global cartesian coordinates with z aligned with
-    northpole to latitude, longitude, depth
-    """
-
     r = (x**2 + y**2 + z**2) ** 0.5
     theta = np.arccos(z / r)
     phi = np.arctan2(y, x)

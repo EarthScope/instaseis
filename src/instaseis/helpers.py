@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Library loading helper.
+"""Library loading helper.
 
 :copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
@@ -16,9 +15,7 @@ import numpy as np
 
 
 def get_band_code(dt):
-    """
-    Figure out the channel band code. Done as in SPECFEM.
-    """
+    """Figure out the channel band code. Done as in SPECFEM."""
     if dt <= 0.001:
         band_code = "F"
     elif dt <= 0.004:
@@ -37,8 +34,7 @@ def get_band_code(dt):
 def elliptic_to_geocentric_latitude(
     lat, axis_a=6378137.0, axis_b=6356752.314245
 ):
-    """
-    Convert a latitude defined on an ellipsoid to a geocentric one.
+    """Convert a latitude defined on an ellipsoid to a geocentric one.
 
     :param lat: The latitude to convert.
     :param axis_a: The length of the major axis of the planet. Defaults to
@@ -71,8 +67,7 @@ def elliptic_to_geocentric_latitude(
 def geocentric_to_elliptic_latitude(
     lat, axis_a=6378137.0, axis_b=6356752.314245
 ):
-    """
-    Convert a geocentric latitude to one defined on an ellipsoid.
+    """Convert a geocentric latitude to one defined on an ellipsoid.
 
     :param lat: The latitude to convert.
     :param axis_a: The length of the major axis of the planet. Defaults to
@@ -103,8 +98,7 @@ def geocentric_to_elliptic_latitude(
 
 
 def sizeof_fmt(num):
-    """
-    Handy formatting for human readable filesizes.
+    """Handy formatting for human readable filesizes.
 
     From http://stackoverflow.com/a/1094933/1657047
     """
@@ -116,9 +110,10 @@ def sizeof_fmt(num):
 
 
 def io_chunker(arr):
-    """
-    Assumes arr is an array of indices. Will return indices thus that
-    adjacent items can be read in one go. Much faster for some cases!
+    """Assumes arr is an array of indices.
+
+    Will return indices thus that adjacent items can be read in one go. Much
+    faster for some cases!
     """
     idx = []
     for _i in range(len(arr)):
@@ -137,9 +132,7 @@ def io_chunker(arr):
 
 
 def rfftfreq(n, d=1.0):  # pragma: no cover
-    """
-    Polyfill for numpy's rfftfreq() for numpy versions that don't have it.
-    """
+    """Polyfill for numpy's rfftfreq() for numpy versions that don't have it."""
     if hasattr(np.fft, "rfftfreq"):
         return np.fft.rfftfreq(n=n, d=d)
 

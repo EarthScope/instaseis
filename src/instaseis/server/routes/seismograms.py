@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-:copyright:
+""":copyright:
     Lion Krischer (lion.krischer@gmail.com), 2020
 :license:
     GNU Lesser General Public License, Version 3 [non-commercial/academic use]
-    (http://www.gnu.org/copyleft/lgpl.html)
+    (http://www.gnu.org/copyleft/lgpl.html).
 """
 
 import concurrent.futures
@@ -65,8 +64,7 @@ def _get_seismogram(
     label,
     format,
 ):
-    """
-    Extract a seismogram from the passed db and write it either to a MiniSEED
+    """Extract a seismogram from the passed db and write it either to a MiniSEED
     or a SACZIP file.
 
     :param db: An open instaseis database.
@@ -123,8 +121,7 @@ def _get_seismogram(
 
 
 def _parse_validate_and_resample_stf(request, db_info):
-    """
-    Parses the JSON based STF, validates it, and resamples it.
+    """Parses the JSON based STF, validates it, and resamples it.
 
     :param request: The request.
     :param db_info: Information about the current database.
@@ -311,8 +308,7 @@ class SeismogramsHandler(InstaseisTimeSeriesHandler):
         )
 
     def validate_parameters(self, args):
-        """
-        Function attempting to validate that the passed parameters are
+        """Function attempting to validate that the passed parameters are
         valid. Does not need to check the types as that has already been done.
         """
         if args.scale == 0.0:
@@ -604,10 +600,9 @@ class SeismogramsHandler(InstaseisTimeSeriesHandler):
 
     @tornado.gen.coroutine
     def get(self, custom_stf=None, nested_executor=False):
-        """
-        :param nested_exectuor: Will not launch another executor, if true.
-            Somehow tornado >= 5.0 does not like nested threads. Might be a
-            good idea performance wise in any case.
+        """:param nested_exectuor: Will not launch another executor, if true.
+        Somehow tornado >= 5.0 does not like nested threads. Might be a
+        good idea performance wise in any case.
         """
         # Parse the arguments. This will also perform a number of sanity
         # checks.

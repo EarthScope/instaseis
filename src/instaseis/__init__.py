@@ -32,8 +32,7 @@ class SourceParseError(InstaseisError):
 
 
 def open_db(path, *args, **kwargs):
-    """
-    Central function to open a local or remote Instaseis database. Any
+    """Central function to open a local or remote Instaseis database. Any
     keyword arguments are passed to the underlying
     :class:`~instaseis.instaseis_db.InstaseisDB` or
     :class:`~instaseis.remote_instaseis_db.RemoteInstaseisDB` classes.

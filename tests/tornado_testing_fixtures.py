@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-The tornado.testing Async stuff packaged as fixtures for use with py.test
+"""The tornado.testing Async stuff packaged as fixtures for use with py.test.
 
 Originally from https://gist.github.com/robcowie/7843633; modified for the
 instaseis server.
@@ -38,9 +37,7 @@ MODEL = TauPyModel("ak135")
 
 
 def _assemble_url(route, **kwargs):
-    """
-    Helper function.
-    """
+    """Helper function."""
     url = "/%s?" % route
     url += "&".join("%s=%s" % (key, value) for key, value in kwargs.items())
     return url
@@ -61,9 +58,7 @@ for name, path in _CONFIG_DBS["databases"].items():
 
 
 def event_info_mock_callback(event_id):
-    """
-    Mock the event info callback for the purpose of testing.
-    """
+    """Mock the event info callback for the purpose of testing."""
     if event_id == "B071791B":
         return {
             "m_rr": -58000000000000000,
@@ -91,8 +86,7 @@ def event_info_mock_callback(event_id):
 
 
 def station_coordinates_mock_callback(networks, stations):
-    """
-    Mock station coordinates callback for the purpose of testing.
+    """Mock station coordinates callback for the purpose of testing.
 
     Return a single station for networks=["IU"] and stations=["ANMO"],
     two stations for networks=["IU", "B*"] and stations=["ANT*", "ANM?"] and no
@@ -146,9 +140,7 @@ def get_travel_time(
     phase_name,
     db_info,
 ):
-    """
-    Fully working travel time callback implementation.
-    """
+    """Fully working travel time callback implementation."""
     if receiverdepthinmeters:
         raise ValueError(
             "This travel time implementation cannot calculate "
@@ -203,6 +195,7 @@ def create_async_client(
     event_info_callback=None,
     travel_time_callback=None,
 ):
+    """Create tornado test client."""
     application = get_application()
     application.db = find_and_open_files(path=path)
     application.station_coordinates_callback = station_coordinates_callback
@@ -250,9 +243,7 @@ def create_async_client(
 
 @pytest.fixture(params=list(DBS.values()))
 def all_clients(io_loop, request):
-    """
-    Fixture returning all clients!
-    """
+    """Fixture returning all clients."""
     return create_async_client(
         io_loop, request, request.param, station_coordinates_callback=None
     )
@@ -270,9 +261,7 @@ def all_clients(io_loop, request):
     ]
 )
 def all_greens_clients(io_loop, request):
-    """
-    Fixture returning all clients compatible with Green's functions!
-    """
+    """Fixture returning all clients compatible with Green's functions."""
     return create_async_client(
         io_loop, request, request.param, station_coordinates_callback=None
     )
@@ -280,9 +269,7 @@ def all_greens_clients(io_loop, request):
 
 @pytest.fixture(params=[_i for _i in list(DBS.values()) if "db_bwd" in _i])
 def reciprocal_clients(io_loop, request):
-    """
-    Fixture returning all reciprocal clients!
-    """
+    """Fixture returning all reciprocal clients."""
     return create_async_client(
         io_loop, request, request.param, station_coordinates_callback=None
     )
@@ -290,9 +277,7 @@ def reciprocal_clients(io_loop, request):
 
 @pytest.fixture(params=list(DBS.values()))
 def all_clients_station_coordinates_callback(io_loop, request):
-    """
-    Fixture returning all with a station coordinates callback.
-    """
+    """Fixture returning all with a station coordinates callback."""
     return create_async_client(
         io_loop,
         request,
@@ -303,9 +288,7 @@ def all_clients_station_coordinates_callback(io_loop, request):
 
 @pytest.fixture(params=list(DBS.values()))
 def all_clients_event_callback(io_loop, request):
-    """
-    Fixture returning all with a event info callback.
-    """
+    """Fixture returning all with a event info callback."""
     return create_async_client(
         io_loop,
         request,
@@ -316,9 +299,7 @@ def all_clients_event_callback(io_loop, request):
 
 @pytest.fixture(params=list(DBS.values()))
 def all_clients_ttimes_callback(io_loop, request):
-    """
-    Fixture returning all clients with a travel time callback.
-    """
+    """Fixture returning all clients with a travel time callback."""
     return create_async_client(
         io_loop, request, request.param, travel_time_callback=get_travel_time
     )
@@ -336,9 +317,7 @@ def all_clients_ttimes_callback(io_loop, request):
     ]
 )
 def all_greens_clients_ttimes_callback(io_loop, request):
-    """
-    Fixture returning all clients compatible with Green's functions!
-    """
+    """Fixture returning all clients compatible with Green's functions."""
     return create_async_client(
         io_loop, request, request.param, travel_time_callback=get_travel_time
     )
@@ -350,9 +329,7 @@ def all_greens_clients_ttimes_callback(io_loop, request):
     ]
 )
 def reciprocal_clients_all_callbacks(io_loop, request):
-    """
-    Fixture returning reciprocal clients with all callbacks.
-    """
+    """Fixture returning reciprocal clients with all callbacks."""
     return create_async_client(
         io_loop,
         request,
@@ -365,9 +342,7 @@ def reciprocal_clients_all_callbacks(io_loop, request):
 
 @pytest.fixture(params=list(DBS.values()))
 def all_clients_all_callbacks(io_loop, request):
-    """
-    Fixture returning all clients with all callbacks.
-    """
+    """Fixture returning all clients with all callbacks."""
     return create_async_client(
         io_loop,
         request,
@@ -406,6 +381,7 @@ def _add_callback(client):
 @pytest.fixture(params=list(DBS.values()))
 @responses.activate
 def all_remote_dbs(io_loop, request):
+    """Fixture for all remote DBs."""
     client = create_async_client(io_loop, request, request.param, None)
 
     _add_callback(client)

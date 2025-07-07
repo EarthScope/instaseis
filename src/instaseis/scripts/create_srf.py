@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Hacky code to generate some finite source in a .srf file
+"""Hacky code to generate some finite source in a .srf file.
 
 :copyright:
     Martin van Driel (Martin@vanDriel.de), 2020
