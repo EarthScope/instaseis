@@ -1,5 +1,8 @@
 # Instaseis - Instant high-frequency seismograms
 
+[![Tests](https://github.com/krischer/instaseis/workflows/Tests/badge.svg)](https://github.com/krischer/instaseis/actions/workflows/test.yml)
+[![Documentation](https://github.com/krischer/instaseis/workflows/Documentation/badge.svg)](https://github.com/krischer/instaseis/actions/workflows/docs.yml)
+
 [Documentation](http://instaseis.net)
 
 [![Instaseis](http://i.imgur.com/6LNoJD6.png)](instaseis.net)
