@@ -1,7 +1,11 @@
 from matplotlib import rc as matplotlibrc
 import matplotlib as mpl
+
+# Ensure matplotlib uses the correct Qt backend
+mpl.use("QtAgg")
+
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_qt5agg import (
+from matplotlib.backends.backend_qtagg import (
     FigureCanvasQTAgg as FigureCanvas,
 )
 
@@ -18,5 +22,5 @@ class Qt4MplCanvas(FigureCanvas):
         # Standard Matplotlib code to generate the plot
         self.fig = Figure()
         # initialize the canvas where the Figure renders into
-        super(Qt4MplCanvas, self).__init__(self.fig)
+        super().__init__(self.fig)
         self.setParent(parent)

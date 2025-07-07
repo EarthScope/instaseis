@@ -10,27 +10,30 @@ Graphical user interface for Instaseis.
     (http://www.gnu.org/copyleft/lgpl.html)
 """
 
-from PySide6 import QtGui, QtCore, QtWidgets
-from PySide6.QtWidgets import QApplication, QMainWindow
-import pyqtgraph as pg
-
-from glob import iglob
 import inspect
+import os
+import sys
 
-# from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
 import numpy as np
 from obspy.imaging.mopad_wrapper import beach
 from obspy import geodetics
 from obspy.taup import TauPyModel
-import os
-import sys
-
-from . import qt_window
+from PySide6 import QtCore, QtWidgets
+from PySide6.QtWidgets import QApplication, QMainWindow
+import pyqtgraph as pg
 
 from instaseis import open_db, Source, Receiver, FiniteSource
 
-# Default to antialiased drawing.
-pg.setConfigOptions(antialias=True, foreground=(50, 50, 50), background=None)
+from . import qt_window
+
+
+# Default to antialiased drawing and configure PyQtGraph for PySide6
+pg.setConfigOptions(
+    antialias=True,
+    foreground=(50, 50, 50),
+    background=None,
+)
 
 # Initialize model once.
 tau_model = TauPyModel(model="ak135")
@@ -42,52 +45,10 @@ DATA = os.path.join(
 )
 
 
-def compile_and_import_ui_files():
-    """
-    Automatically compiles all .ui files found in the same directory as the
-    application py file.
-    They will have the same name as the .ui files just with a .py extension.
-
-    Needs to be defined in the same file as function loading the gui as it
-    modifies the globals to be able to automatically import the created py-ui
-    files. Its just very convenient.
-    """
-    directory = os.path.dirname(
-        os.path.abspath(inspect.getfile(inspect.currentframe()))
-    )
-    for filename in iglob(os.path.join(directory, "*.ui")):
-        ui_file = filename
-        py_ui_file = os.path.splitext(ui_file)[0] + os.path.extsep + "py"
-        if not os.path.exists(py_ui_file) or (
-            os.path.getmtime(ui_file) >= os.path.getmtime(py_ui_file)
-        ):
-            # No more function in PySide6 so we'll just call the built in tool
-            # directly.
-            import PySide6 as ref_mod
-
-            pyside_dir = os.path.dirname(ref_mod.__file__)
-
-            exe = os.path.join(pyside_dir, "uic")
-            cmd = f'{exe} -g python --output="{py_ui_file}" "{ui_file}"'
-
-            print("Compiling ui file: %s" % ui_file)
-            print(f"Executing: '{cmd}'")
-            os.system(cmd)
-            print("Done")
-
-        # Import the (compiled) file.
-        try:
-            import_name = os.path.splitext(os.path.basename(py_ui_file))[0]
-            globals()[import_name] = imp.load_source(import_name, py_ui_file)
-        except ImportError as e:
-            print("Error importing %s" % py_ui_file)
-            print(e.message)
-
-
 class Window(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
-        # Injected by the compile_and_import_ui_files() function.
+
         self.ui = qt_window.Ui_MainWindow()  # NOQA
         self.ui.setupUi(self)
 
@@ -234,11 +195,11 @@ class Window(QMainWindow):
         fig.canvas.draw()
 
     def plot_map(self):
-        return
+        """Plot world map using matplotlib with background image."""
         self.mpl_map_figure = self.ui.map_fig.fig
 
-        # if hasattr(self, 'mpl_map_ax'):
-        #     self.mpl_map_ax.clear()
+        if hasattr(self, "mpl_map_ax"):
+            self.mpl_map_ax.clear()
 
         self.mpl_map_ax = self.mpl_map_figure.add_axes(
             [0.01, 0.01, 0.98, 0.98]
@@ -247,11 +208,10 @@ class Window(QMainWindow):
             "Left click: Set Receiver; Right click: Set Source"
         )
 
-        # self.map = Basemap(
-        #     projection="moll", lon_0=0, resolution="c", ax=self.mpl_map_ax
-        # )
-
-        self.map.drawmapboundary(fill_color="#cccccc")
+        # Set up the map with proper aspect ratio and limits
+        self.mpl_map_ax.set_xlim(-180, 180)
+        self.mpl_map_ax.set_ylim(-90, 90)
+        self.mpl_map_ax.set_aspect("equal")
 
         # Define planet radii and images paths
         radii_planets = {
@@ -280,7 +240,28 @@ class Window(QMainWindow):
                 if abs(self.instaseis_db.info.planet_radius - value) < 10e3:
                     imfile = os.path.join(DATA, imfiles[key])
 
-        self.map.warpimage(image=imfile, zorder=0)
+        # Load and display the background image
+        if os.path.exists(imfile):
+            try:
+                img = plt.imread(imfile)
+                self.mpl_map_ax.imshow(
+                    img, extent=[-180, 180, -90, 90], aspect="auto", zorder=0
+                )
+            except Exception as e:
+                print(f"Warning: Could not load image {imfile}: {e}")
+                # Fall back to simple grid
+                self._draw_simple_grid()
+        else:
+            self._draw_simple_grid()
+
+        # Add coordinate grid
+        self.mpl_map_ax.grid(True, alpha=0.3, color="gray", linewidth=0.5)
+        self.mpl_map_ax.set_xlabel("Longitude")
+        self.mpl_map_ax.set_ylabel("Latitude")
+
+        # Set up tick marks
+        self.mpl_map_ax.set_xticks(np.arange(-180, 181, 60))
+        self.mpl_map_ax.set_yticks(np.arange(-90, 91, 30))
 
         self.mpl_map_figure.patch.set_alpha(0.0)
 
@@ -289,11 +270,72 @@ class Window(QMainWindow):
         )
         self.mpl_map_figure.canvas.draw()
 
+    def _draw_simple_grid(self):
+        """Draw a simple grid background when no image is available."""
+        # Draw continents outline (very basic)
+        self.mpl_map_ax.add_patch(
+            plt.Rectangle(
+                (-180, -90), 360, 180, facecolor="lightblue", alpha=0.3
+            )
+        )
+
+        # Draw some basic continent shapes (simplified)
+        continent_patches = [
+            # North America (very simplified)
+            plt.Polygon(
+                [
+                    (-160, 70),
+                    (-140, 70),
+                    (-120, 50),
+                    (-100, 30),
+                    (-80, 25),
+                    (-70, 45),
+                    (-60, 50),
+                    (-50, 60),
+                    (-140, 80),
+                    (-160, 70),
+                ],
+                facecolor="lightgray",
+                alpha=0.7,
+            ),
+            # Europe/Asia (very simplified)
+            plt.Polygon(
+                [
+                    (0, 70),
+                    (40, 70),
+                    (60, 60),
+                    (80, 50),
+                    (120, 45),
+                    (140, 60),
+                    (160, 70),
+                    (140, 75),
+                    (40, 75),
+                    (0, 70),
+                ],
+                facecolor="lightgray",
+                alpha=0.7,
+            ),
+            # Africa (very simplified)
+            plt.Polygon(
+                [(10, 35), (50, 35), (40, -35), (20, -35), (10, 35)],
+                facecolor="lightgray",
+                alpha=0.7,
+            ),
+        ]
+
+        for patch in continent_patches:
+            self.mpl_map_ax.add_patch(patch)
+
     def _on_map_mouse_click_event(self, event):
         if None in (event.xdata, event.ydata):
             return
-        # Get map coordinates by the inverse transform.
-        lng, lat = self.map(event.xdata, event.ydata, inverse=True)
+        # In the new system, xdata and ydata are already in longitude/latitude
+        lng, lat = event.xdata, event.ydata
+
+        # Ensure coordinates are within valid ranges
+        lng = max(-180, min(180, lng))
+        lat = max(-90, min(90, lat))
+
         # Left click: set receiver
         if event.button == 1:
             self.ui.receiver_longitude.setValue(lng)
@@ -304,6 +346,9 @@ class Window(QMainWindow):
             self.ui.source_latitude.setValue(lat)
 
     def _plot_event(self):
+        if not hasattr(self, "mpl_map_ax") or self.mpl_map_ax is None:
+            return
+
         if self.ui.finsource_tab.currentIndex() == 0:
             s = self.source
             lng, lat = s.longitude, s.latitude
@@ -326,15 +371,24 @@ class Window(QMainWindow):
         except AttributeError:
             pass
 
-        x1, y1 = self.map(lng, lat)
-        self.__event_map_obj = self.map.scatter(
-            x1, y1, s=300, zorder=10, color="yellow", marker="*", edgecolor="k"
+        # In the new system, coordinates are used directly
+        self.__event_map_obj = self.mpl_map_ax.scatter(
+            lng,
+            lat,
+            s=300,
+            zorder=10,
+            color="yellow",
+            marker="*",
+            edgecolor="k",
         )
         self.__event_map_obj.longitude = lng
         self.__event_map_obj.latitude = lat
         self.mpl_map_figure.canvas.draw()
 
     def _plot_receiver(self):
+        if not hasattr(self, "mpl_map_ax") or self.mpl_map_ax is None:
+            return
+
         r = self.receiver
         lng, lat = r.longitude, r.latitude
         try:
@@ -351,15 +405,18 @@ class Window(QMainWindow):
         except AttributeError:
             pass
 
-        x1, y1 = self.map(lng, lat)
-        self.__receiver_map_obj = self.map.scatter(
-            x1, y1, s=170, zorder=10, color="red", marker="v", edgecolor="k"
+        # In the new system, coordinates are used directly
+        self.__receiver_map_obj = self.mpl_map_ax.scatter(
+            lng, lat, s=170, zorder=10, color="red", marker="v", edgecolor="k"
         )
         self.__receiver_map_obj.longitude = lng
         self.__receiver_map_obj.latitude = lat
         self.mpl_map_figure.canvas.draw()
 
     def _plot_bg_receivers(self):
+        if not hasattr(self, "mpl_map_ax") or self.mpl_map_ax is None:
+            return
+
         try:
             self.__bg_receivers_map_obj.remove()
         except AttributeError:
@@ -369,11 +426,11 @@ class Window(QMainWindow):
         yl = []
         for r in self.receivers:
             lng, lat = r.longitude, r.latitude
-            x1, y1 = self.map(lng, lat)
-            xl.append(x1)
-            yl.append(y1)
+            xl.append(lng)
+            yl.append(lat)
 
-        self.__bg_receivers_map_obj = self.map.scatter(
+        # In the new system, coordinates are used directly
+        self.__bg_receivers_map_obj = self.mpl_map_ax.scatter(
             xl,
             yl,
             s=100,
@@ -470,7 +527,7 @@ class Window(QMainWindow):
             ):
                 st = self.st_copy.copy()
             else:
-                prog_diag = QtGui.QProgressDialog(
+                prog_diag = QtWidgets.QProgressDialog(
                     "Calculating", "Cancel", 0, len(self.finite_source), self
                 )
                 prog_diag.setWindowModality(QtCore.Qt.WindowModal)
@@ -609,7 +666,7 @@ class Window(QMainWindow):
 
     @QtCore.Slot()
     def on_select_remote_connection_button_released(self):
-        text, ok = QtGui.QInputDialog.getText(
+        text, ok = QtWidgets.QInputDialog.getText(
             self,
             "Remote Instaseis Connection",
             "Enter URL to remote Instaseis Server:",
@@ -636,13 +693,13 @@ class Window(QMainWindow):
     def on_open_srf_file_button_released(self):
         pwd = os.getcwd()
         self.finite_src_file = str(
-            QtGui.QFileDialog.getOpenFileName(
+            QtWidgets.QFileDialog.getOpenFileName(
                 self,
                 "Choose *.srf or *.param File",
                 pwd,
                 "Standard Rupture Format (*.srf);;"
                 "USGS finite source files (*.param)",
-            )
+            )[0]
         )
         if not self.finite_src_file:
             return
@@ -709,7 +766,9 @@ class Window(QMainWindow):
     def on_load_source_button_released(self):
         pwd = os.getcwd()
         self.source_file = str(
-            QtGui.QFileDialog.getOpenFileName(self, "Choose Source File", pwd)
+            QtWidgets.QFileDialog.getOpenFileName(
+                self, "Choose Source File", pwd
+            )[0]
         )
         if not self.source_file:
             return
@@ -727,49 +786,49 @@ class Window(QMainWindow):
         self.ui.depth_slider.setValue(-s.depth_in_m / 1e3)
         self.set_info()
 
-    @QtCore.Slot("double")
-    def on_source_latitude_valueChanged(self, *args):
+    @QtCore.Slot(float)
+    def on_source_latitude_valueChanged(self, value):
         self.update()
 
-    @QtCore.Slot("double")
-    def on_source_longitude_valueChanged(self, *args):
+    @QtCore.Slot(float)
+    def on_source_longitude_valueChanged(self, value):
         self.update()
 
-    @QtCore.Slot("double")
-    def on_receiver_latitude_valueChanged(self, *args):
+    @QtCore.Slot(float)
+    def on_receiver_latitude_valueChanged(self, value):
         self.update()
 
-    @QtCore.Slot("double")
-    def on_receiver_longitude_valueChanged(self, *args):
+    @QtCore.Slot(float)
+    def on_receiver_longitude_valueChanged(self, value):
         self.update()
 
-    @QtCore.Slot("double")
-    def on_m_rr_valueChanged(self, *args):
+    @QtCore.Slot(float)
+    def on_m_rr_valueChanged(self, value):
         self._draw_mt()
         self.update()
 
-    @QtCore.Slot("double")
-    def on_m_tt_valueChanged(self, *args):
+    @QtCore.Slot(float)
+    def on_m_tt_valueChanged(self, value):
         self._draw_mt()
         self.update()
 
-    @QtCore.Slot("double")
-    def on_m_pp_valueChanged(self, *args):
+    @QtCore.Slot(float)
+    def on_m_pp_valueChanged(self, value):
         self._draw_mt()
         self.update()
 
-    @QtCore.Slot("double")
-    def on_m_rt_valueChanged(self, *args):
+    @QtCore.Slot(float)
+    def on_m_rt_valueChanged(self, value):
         self._draw_mt()
         self.update()
 
-    @QtCore.Slot("double")
-    def on_m_rp_valueChanged(self, *args):
+    @QtCore.Slot(float)
+    def on_m_rp_valueChanged(self, value):
         self._draw_mt()
         self.update()
 
-    @QtCore.Slot("double")
-    def on_m_tp_valueChanged(self, *args):
+    @QtCore.Slot(float)
+    def on_m_tp_valueChanged(self, value):
         self._draw_mt()
         self.update()
 
@@ -778,25 +837,25 @@ class Window(QMainWindow):
         value = int(-1.0 * int(self.ui.depth_slider.value()))
         return value
 
-    @QtCore.Slot()
-    def on_depth_slider_valueChanged(self, *args):
+    @QtCore.Slot(int)
+    def on_depth_slider_valueChanged(self, value):
         self.ui.depth_label.setText("Depth: %i km" % self.source_depth)
         self.update()
 
-    @QtCore.Slot()
-    def on_strike_slider_valueChanged(self, *args):
+    @QtCore.Slot(int)
+    def on_strike_slider_valueChanged(self, value):
         self.ui.strike_value.setText("%i" % self.ui.strike_slider.value())
         self._draw_mt()
         self.update()
 
-    @QtCore.Slot()
-    def on_dip_slider_valueChanged(self, *args):
+    @QtCore.Slot(int)
+    def on_dip_slider_valueChanged(self, value):
         self.ui.dip_value.setText("%i" % self.ui.dip_slider.value())
         self._draw_mt()
         self.update()
 
-    @QtCore.Slot()
-    def on_rake_slider_valueChanged(self, *args):
+    @QtCore.Slot(int)
+    def on_rake_slider_valueChanged(self, value):
         self.ui.rake_value.setText("%i" % self.ui.rake_slider.value())
         self._draw_mt()
         self.update()
@@ -807,7 +866,7 @@ class Window(QMainWindow):
         widgets[-1].autoRange()
 
     @QtCore.Slot()
-    def on_reset_view_button_released(self, *args):
+    def on_reset_view_button_released(self):
         self.autoRange()
 
     @QtCore.Slot()
@@ -817,8 +876,8 @@ class Window(QMainWindow):
         self.ui.sr_ref_label.setEnabled(resample)
         self.update()
 
-    @QtCore.Slot("double")
-    def on_resample_factor_valueChanged(self, *args):
+    @QtCore.Slot(float)
+    def on_resample_factor_valueChanged(self, value):
         self.update()
 
     @QtCore.Slot()
@@ -832,8 +891,8 @@ class Window(QMainWindow):
         self.ui.lowpass_label.setEnabled(resample)
         self.update()
 
-    @QtCore.Slot("double")
-    def on_lowpass_period_valueChanged(self, *args):
+    @QtCore.Slot(float)
+    def on_lowpass_period_valueChanged(self, value):
         self.update()
 
     @QtCore.Slot()
@@ -843,15 +902,15 @@ class Window(QMainWindow):
         self.ui.highpass_label.setEnabled(resample)
         self.update()
 
-    @QtCore.Slot("double")
-    def on_highpass_period_valueChanged(self, *args):
+    @QtCore.Slot(float)
+    def on_highpass_period_valueChanged(self, value):
         self.update()
 
     @QtCore.Slot()
     def on_zero_phase_check_box_stateChanged(self):
         self.update()
 
-    @QtCore.Slot("int")
+    @QtCore.Slot()
     def on_components_combo_currentIndexChanged(self):
         self.update()
 
@@ -873,9 +932,9 @@ class Window(QMainWindow):
     def on_load_stations_button_released(self):
         pwd = os.getcwd()
         self.stations_file = str(
-            QtGui.QFileDialog.getOpenFileName(
+            QtWidgets.QFileDialog.getOpenFileName(
                 self, "Choose Stations File", pwd
-            )
+            )[0]
         )
         if not self.stations_file:
             return
@@ -890,18 +949,26 @@ class Window(QMainWindow):
 
         self._plot_bg_receivers()
 
-    @QtCore.Slot("int")
+    @QtCore.Slot()
     def on_stations_combo_currentIndexChanged(self):
         idx = self.ui.stations_combo.currentIndex()
         self.ui.receiver_longitude.setValue(self.receivers[idx].longitude)
         self.ui.receiver_latitude.setValue(self.receivers[idx].latitude)
 
     def eventFilter(self, source, event):
-        if event.type() == QtCore.QEvent.MouseMove:
+        try:
+            mouse_move_type = QtCore.QEvent.Type.MouseMove
+            no_button = QtCore.Qt.MouseButton.NoButton
+        except AttributeError:
+            # Fallback for older PySide6 versions
+            mouse_move_type = QtCore.QEvent.MouseMove
+            no_button = QtCore.Qt.NoButton
+
+        if event.type() == mouse_move_type:
             if (
                 source.parent()
                 in [self.ui.z_graph, self.ui.n_graph, self.ui.e_graph]
-                and event.buttons() == QtCore.Qt.NoButton
+                and event.buttons() == no_button
             ):
                 try:
                     tt = float(
@@ -924,7 +991,7 @@ class Window(QMainWindow):
                 self.ui.n_graph.setToolTip(tooltipstr)
                 self.ui.e_graph.setToolTip(tooltipstr)
 
-        return QtGui.QMainWindow.eventFilter(self, source, event)
+        return QtWidgets.QMainWindow.eventFilter(self, source, event)
 
 
 def launch():
@@ -933,16 +1000,3 @@ def launch():
     window = Window()
     window.show()
     sys.exit(app.exec_())
-
-    # Automatically compile all ui files if they have been changed.
-    # compile_and_import_ui_files()
-
-    # Launch and open the window.
-    # pp = QApplication(sys.argv)
-    # indow = Window()
-
-    # Show and bring window to foreground.
-    # indow.show()
-    # pp.installEventFilter(window)
-    # indow.raise_()
-    # s._exit(app.exec_())

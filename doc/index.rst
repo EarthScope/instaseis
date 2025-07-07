@@ -568,6 +568,7 @@ Detailed Documentation
    :maxdepth: 2
 
    instaseis
+   gui
    source
    helpers
    server
