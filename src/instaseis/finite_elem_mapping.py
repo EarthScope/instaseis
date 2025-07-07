@@ -11,9 +11,8 @@ AxiSEM's kernel module.
     (http://www.gnu.org/copyleft/lgpl.html)
 """
 
-from numba import njit
 import numpy as np
-
+from numba import njit
 import instaseis
 
 
@@ -620,6 +619,7 @@ def _inv_mapping_iterative(
     return np.array([xi_curr, eta_curr], dtype=np.float64)
 
 
+@njit(cache=instaseis._use_numba_cache)
 def inv_mapping_spheroid(s: float, z: float, nodes: np.ndarray) -> np.ndarray:
     """
     Computes the reference coordinates (xi, eta) for a physical point (s, z)
@@ -635,6 +635,7 @@ def inv_mapping_spheroid(s: float, z: float, nodes: np.ndarray) -> np.ndarray:
     )
 
 
+@njit(cache=instaseis._use_numba_cache)
 def inv_mapping_subpar(s: float, z: float, nodes: np.ndarray) -> np.ndarray:
     """
     Computes the reference coordinates (xi, eta) for a physical point (s, z)
@@ -650,6 +651,7 @@ def inv_mapping_subpar(s: float, z: float, nodes: np.ndarray) -> np.ndarray:
     )
 
 
+@njit(cache=instaseis._use_numba_cache)
 def inv_mapping_semino(s: float, z: float, nodes: np.ndarray) -> np.ndarray:
     """
     Computes the reference coordinates (xi, eta) for a physical point (s, z)
@@ -665,6 +667,7 @@ def inv_mapping_semino(s: float, z: float, nodes: np.ndarray) -> np.ndarray:
     )
 
 
+@njit(cache=instaseis._use_numba_cache)
 def inv_mapping_semiso(s: float, z: float, nodes: np.ndarray) -> np.ndarray:
     """
     Computes the reference coordinates (xi, eta) for a physical point (s, z)

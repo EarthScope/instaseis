@@ -29,10 +29,10 @@ from instaseis.finite_elem_mapping import (
 
 @njit(cache=instaseis._use_numba_cache)
 def _mapping_dispatch(xi_val, eta_val, nodes, element_type):
-    if element_type == 0:  # subpar
-        return mapping_subpar(xi_val, eta_val, nodes)
-    elif element_type == 1:  # spheroid
+    if element_type == 0:  # spheroid
         return mapping_spheroid(xi_val, eta_val, nodes)
+    elif element_type == 1:  # subpar
+        return mapping_subpar(xi_val, eta_val, nodes)
     elif element_type == 2:  # semino
         return mapping_semino(xi_val, eta_val, nodes)
     elif element_type == 3:  # semiso
@@ -43,10 +43,10 @@ def _mapping_dispatch(xi_val, eta_val, nodes, element_type):
 
 @njit(cache=instaseis._use_numba_cache)
 def _inv_jacobian_dispatch(xi_val, eta_val, nodes, element_type):
-    if element_type == 0:  # subpar
-        return inv_jacobian_subpar(xi_val, eta_val, nodes)
-    elif element_type == 1:  # spheroid
+    if element_type == 0:  # spheroid
         return inv_jacobian_spheroid(xi_val, eta_val, nodes)
+    elif element_type == 1:  # subpar
+        return inv_jacobian_subpar(xi_val, eta_val, nodes)
     elif element_type == 2:  # semino
         return inv_jacobian_semino(xi_val, eta_val, nodes)
     elif element_type == 3:  # semiso
