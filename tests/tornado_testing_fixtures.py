@@ -8,6 +8,7 @@ instaseis server.
 """
 
 from collections import OrderedDict
+import asyncio
 import inspect
 import os
 import pytest
@@ -177,12 +178,18 @@ def get_travel_time(
 @pytest.fixture
 def io_loop(request):
     """Create an instance of the `tornado.ioloop.IOLoop` for each test case."""
-    io_loop = IOLoop()
-    io_loop.make_current()
+    # Create a new event loop for this test
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+    # Get the IOLoop wrapper around the asyncio event loop
+    io_loop = IOLoop.current()
 
     def _close():
-        io_loop.clear_current()
-        io_loop.close(all_fds=True)
+        # Clear the event loop and close it
+        asyncio.set_event_loop(None)
+        if not loop.is_closed():
+            loop.close()
 
     request.addfinalizer(_close)
     return io_loop

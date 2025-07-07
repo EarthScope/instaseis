@@ -48,12 +48,7 @@ STF_MAP = {
 
 def _diff_and_integrate(n_derivative, data, comp, dt_out):
     for _ in np.arange(n_derivative):
-        # In some numpy version there is an incompatibility here - 1.11
-        # works for both so we branch here.
-        if LooseVersion(np.__version__) >= LooseVersion("1.11.0"):
-            data[comp] = np.gradient(data[comp], dt_out)
-        else:  # pragma: no cover
-            data[comp] = np.gradient(data[comp], [dt_out])
+        data[comp] = np.gradient(data[comp], dt_out)
 
     # Cannot happen currently - maybe with other source time functions?
     for _ in np.arange(-n_derivative):  # pragma: no cover
@@ -862,10 +857,10 @@ class BaseInstaseisDB(metaclass=ABCMeta):
             reciprocal="reciprocal" if info.is_reciprocal else "forward",
             components=info.components,
             source_depth=(
-                "\tsource depth         : %.2f km\n" % info.source_depth
-            )
-            if info.source_depth is not None
-            else "",
+                ("\tsource depth         : %.2f km\n" % info.source_depth)
+                if info.source_depth is not None
+                else ""
+            ),
             velocity_model=info.velocity_model,
             attenuation=info.attenuation,
             period=info.period,

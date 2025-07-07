@@ -211,7 +211,7 @@ class RawSeismogramsHandler(InstaseisTimeSeriesHandler):
                         400, log_message=msg, reason=msg
                     )
                 break
-            else:
+            else:  # pragma: no cover
                 # Cannot really happen.
                 raise NotImplementedError
         else:

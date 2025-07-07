@@ -494,7 +494,7 @@ class Source(SourceOrReceiver, SourceTimeFunction):
                 m_rp=t.m_rp,
                 m_tp=t.m_tp,
             )
-        else:
+        else:  # pragma: no cover
             raise NotImplementedError
 
     @classmethod

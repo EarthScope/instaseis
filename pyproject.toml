@@ -60,3 +60,21 @@ target-version = "py311"
 
 # can be empty if no extra settings are needed, presence enables setuptools-scm.
 [tool.setuptools_scm]
+
+[tool.coverage.run]
+omit = [
+    "tests/*",
+    "src/instaseis/benchmark/*",
+    "src/instaseis/gui/*",
+    "src/instaseis/scripts/*",
+    # Numba is not supported by coverage.
+    "src/instaseis/finite_elem_mapping.py",
+    "src/instaseis/sem_derivatives.py",
+    "src/instaseis/spectral_basis.py"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+]

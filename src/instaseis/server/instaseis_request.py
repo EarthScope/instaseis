@@ -183,7 +183,7 @@ class InstaseisTimeSeriesHandler(InstaseisRequestHandler, metaclass=ABCMeta):
                 raise tornado.web.HTTPError(400, log_message=msg, reason=msg)
 
     @abstractmethod
-    def validate_parameters(self, args):
+    def validate_parameters(self, args):  # pragma: no cover
         """
         Implement this function to make checks not already performed in
         validate_common_parameters().
