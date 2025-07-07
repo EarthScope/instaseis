@@ -30,7 +30,6 @@ from scipy.spatial import cKDTree
 
 
 class Buffer(object):
-
     """A simple memory-limited buffer with a dictionary-like interface.
     Implemented as a kind of priority queue where priority is highest for
     recently accessed items. Thus the "stalest" items are removed first once
@@ -114,7 +113,6 @@ def get_time_axis(ds, ndumps):
 
 
 class Mesh(object):
-
     """A class to handle the actual netCDF files written by AxiSEM."""
 
     # Minimal acceptable version of the netCDF database files.

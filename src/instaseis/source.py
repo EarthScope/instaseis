@@ -30,7 +30,6 @@ DEFAULT_MU = 32e9
 
 
 class USGSParamFileParsingException(Exception):
-
     """Custom exception for nice and hopefully save exception passing."""
 
     pass
@@ -324,7 +323,6 @@ class SourceTimeFunction(object):
 
 
 class Source(SourceOrReceiver, SourceTimeFunction):
-
     """Class to handle a seismic moment tensor source including a source time
     function.
     """
@@ -659,7 +657,6 @@ class Source(SourceOrReceiver, SourceTimeFunction):
 
 
 class ForceSource(SourceOrReceiver, SourceTimeFunction):
-
     """Class to handle a seismic force source.
 
     :param latitude: geocentric latitude of the source in degree
@@ -755,7 +752,6 @@ class ForceSource(SourceOrReceiver, SourceTimeFunction):
 
 
 class Receiver(SourceOrReceiver):
-
     """Class dealing with seismic receivers.
 
     :type latitude: float
@@ -1009,7 +1005,6 @@ class Receiver(SourceOrReceiver):
 
 
 class FiniteSource(object):
-
     """A class to handle finite sources represented by a number of point sources.
 
     :param pointsources: The points sources making up the finite source.

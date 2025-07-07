@@ -14,7 +14,6 @@ matplotlibrc("figure.subplot", left=0.0, right=1.0, bottom=0.0, top=1.0)
 
 
 class Qt4MplCanvas(FigureCanvas):
-
     """Class to represent the FigureCanvas widget."""
 
     def __init__(self, parent=None):

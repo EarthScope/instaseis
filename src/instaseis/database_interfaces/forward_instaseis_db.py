@@ -21,7 +21,6 @@ from ..source import Source
 
 
 class ForwardInstaseisDB(BaseNetCDFInstaseisDB):
-
     """Forward Instaseis database."""
 
     def __init__(

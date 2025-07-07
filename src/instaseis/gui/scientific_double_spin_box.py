@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """Originally from https://gist.github.com/jdreaver/0be2e44981159d0854f5."""
+
 from PySide6 import QtGui, QtWidgets
 import numpy as np
 import re

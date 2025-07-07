@@ -45,7 +45,6 @@ Coordinates = collections.namedtuple("Coordinates", ["s", "phi", "z"])
 
 
 class BaseNetCDFInstaseisDB(BaseInstaseisDB, metaclass=ABCMeta):
-
     """Base class for extracting seismograms from a local Instaseis netCDF
     database.
     """

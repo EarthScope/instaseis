@@ -27,7 +27,6 @@ from .. import (
 
 
 class RemoteInstaseisDB(BaseInstaseisDB):
-
     """Remote Instaseis database interface."""
 
     def __init__(self, url, *args, **kwargs):

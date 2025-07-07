@@ -5,7 +5,6 @@ import asyncio
 # This allows event loops to be created in any thread, which is needed
 # for Tornado's ThreadPoolExecutor usage
 class _AnyThreadEventLoopPolicy(asyncio.DefaultEventLoopPolicy):
-
     """Custom event loop policy that allows loops in any thread."""
 
     def get_event_loop(self):

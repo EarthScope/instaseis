@@ -21,7 +21,6 @@ from ..source import Source
 
 
 class ForwardMergedInstaseisDB(BaseNetCDFInstaseisDB):
-
     """Merged forward Instaseis database."""
 
     def __init__(

@@ -21,7 +21,6 @@ from ..source import Source, ForceSource
 
 
 class ReciprocalMergedInstaseisDB(BaseNetCDFInstaseisDB):
-
     """Reciprocal Merged Instaseis Database."""
 
     def __init__(

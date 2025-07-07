@@ -43,7 +43,6 @@ HEADERS = {"User-Agent": USER_AGENT, "Accept-Encoding": "gzip,deflate"}
 
 
 class SyngineInstaseisDB(BaseInstaseisDB):
-
     """Remote Instaseis interface connecting with IRIS' syngine service."""
 
     def __init__(

@@ -55,7 +55,6 @@ def _diff_and_integrate(n_derivative, data, comp, dt_out):
 
 
 class BaseInstaseisDB(metaclass=ABCMeta):
-
     """Base class for all Instaseis database classes defining the user interface."""
 
     def get_greens_function(

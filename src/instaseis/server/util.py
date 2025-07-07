@@ -31,7 +31,6 @@ PHASE_OFFSET_PATTERN = re.compile(r"(^[A-Za-z0-9^]+)([\+-])([\deE\.\-\+]+$)")
 
 
 class IOQueue(object):
-
     """Object passed to the zipfile constructor which acts as a file-like object.
 
     Iterating over the object yields the data pieces written to it since it
