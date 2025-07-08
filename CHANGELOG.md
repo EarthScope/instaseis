@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.5.0] - 2025-07-08
+
+- Convert the Fortran code to Numba code. This has the big advantage of not
+  needing a Fortran compiler anymore, meaning it is much easier to install,
+  especially on Windows. It should just be installable with pip now on most
+  systems.
+- Modernize the infrastructure by moving from setup.py to pyproject.toml.
+- Move from flake8 to ruff.
+- Modernize whatever else needed fixing so it runs with the latest version of
+  all dependencies.
+- Target Python versions are currently Python 3.12 and 3.13 on Windows, Linux,
+  and macOS.
+- Migrate from travis + codecov to github actions.
+- Upgrade the UI to pyside6 - there are some issues on ARM macs though but
+  that seems to be some incompatibility between pyside6 and pyqtgraph.
+
 ## [1.4.2] - 2020-08-11
 
 - Fixed problem which modified cached values in certain circumstances (see #76).
