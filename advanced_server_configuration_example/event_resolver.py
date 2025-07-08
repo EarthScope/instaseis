@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-The MIT License (MIT)
+"""The MIT License (MIT).
 
 Copyright (c) 2020 Lion Krischer
 
@@ -23,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+
 import copy
 import json
 import obspy
@@ -39,8 +39,7 @@ class EventNotFoundError(ValueError):
 
 
 def create_event_json_file(output_filename):
-    """
-    Download the GCMT catalog up to 2013 and store everything in a JSON file
+    """Download the GCMT catalog up to 2013 and store everything in a JSON file
     which can be used for the later stage.
 
     If the file already exist this function is a no-op.
@@ -89,9 +88,7 @@ def create_event_json_file(output_filename):
 
 
 def get_event_information(event_id, filename):
-    """
-    Return the event information for the given event id as a dictionary.
-    """
+    """Return the event information for the given event id as a dictionary."""
     filename = os.path.abspath(filename)
     if filename not in CACHE:
         with open(filename, "rt") as fh:

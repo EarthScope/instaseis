@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-A very simple and fairly fast way to get coordinates of known seismic stations
+"""A very simple and fairly fast way to get coordinates of known seismic stations
 based on an in-memory SQLite database including more complex wildcard based
 queries.
 
@@ -61,6 +60,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+
 import csv
 import io
 import sqlite3
@@ -69,8 +69,7 @@ from instaseis.helpers import elliptic_to_geocentric_latitude
 
 
 def parse_station_file(filename):
-    """
-    Parse the station file to an in-memory sqlite database. This is super quick
+    """Parse the station file to an in-memory sqlite database. This is super quick
     so its not necessary to store it on disc.
 
     Returns the connection and an active cursor.
