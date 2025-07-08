@@ -54,19 +54,6 @@ def lagrange_interpol_2D_td(points1, points2, coefficients, x1, x2):
     # coefficients shape is assumed to be (nsamp, n1 + 1, n2 + 1)
     nsamp = coefficients.shape[0]
 
-    # Ensure that the dimensions of coefficients match points1 and points2
-    # These checks are good for debugging but might be removed for pure Numba performance
-    # if inputs are guaranteed to be correct.
-    # For Numba, raising exceptions like this is not standard.
-    # Consider asserting or ensuring valid inputs before calling the jitted function.
-    # if coefficients.ndim != 3 or \
-    #    coefficients.shape[1] != n1 + 1 or \
-    #    coefficients.shape[2] != n2 + 1:
-    #    # Handle error: In Numba, you can't raise arbitrary Python exceptions easily.
-    #    # One option is to return a specific value or array indicating an error.
-    #    # For now, we assume valid inputs as per the Fortran counterpart.
-    #    pass
-
     interpolant = np.zeros(nsamp, dtype=np.float64)
 
     # Precompute l_i_vals for x1 and points1
