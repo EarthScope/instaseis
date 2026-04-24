@@ -8,15 +8,23 @@
 """
 
 import collections
-import os
 
 import h5py
+from cloudpathlib import AnyPath
 
 from .. import InstaseisError, InstaseisNotFoundError
 from .forward_instaseis_db import ForwardInstaseisDB
 from .forward_merged_instaseis_db import ForwardMergedInstaseisDB
+from .mesh import _h5py_driver
 from .reciprocal_instaseis_db import ReciprocalInstaseisDB
 from .reciprocal_merged_instaseis_db import ReciprocalMergedInstaseisDB
+
+
+_TARGET_FILENAMES = frozenset([
+    "ordered_output.nc4",
+    "axisem_output.nc4",
+    "merged_output.nc4",
+])
 
 
 def find_and_open_files(path, *args, **kwargs):
@@ -24,24 +32,27 @@ def find_and_open_files(path, *args, **kwargs):
     interface.
 
     Will recursively search the path and return an instaseis database class
-    if possible.
+    if possible. Supports both local paths and S3 URIs (s3://...).
     """
+    root_path = AnyPath(path)
     found_files = []
-    for root, dirs, filenames in os.walk(path, followlinks=True):
-        # Limit depth of filetree traversal
-        nested_levels = os.path.relpath(root, path).split(os.path.sep)
-        if len(nested_levels) >= 4:
-            del dirs[:]
-        for filename in sorted(filenames, reverse=True):
-            if filename in [
-                "ordered_output.nc4",
-                "axisem_output.nc4",
-                "merged_output.nc4",
-            ]:
+
+    def _walk(current, depth):
+        try:
+            children = list(current.iterdir())
+        except Exception:
+            return
+        dirs = [c for c in children if c.is_dir()]
+        by_name = {c.name: c for c in children if c.is_file()}
+        for name in sorted(by_name, reverse=True):
+            if name in _TARGET_FILENAMES:
+                found_files.append(by_name[name])
                 break
-        else:
-            continue
-        found_files.append(os.path.join(root, filename))
+        if depth < 4:
+            for d in dirs:
+                _walk(d, depth + 1)
+
+    _walk(root_path, 0)
 
     if len(found_files) == 0:
         raise InstaseisNotFoundError(
@@ -50,14 +61,14 @@ def find_and_open_files(path, *args, **kwargs):
     elif len(found_files) not in [1, 2, 4]:
         raise InstaseisError(
             "1, 2 or 4 netCDF must be present in the folder structure. "
-            "Found %i: \t%s" % (len(found_files), "\n\t".join(found_files))
+            "Found %i: \t%s" % (len(found_files), "\n\t".join(str(f) for f in found_files))
         )
 
     # Catch the merged file first because its easy.
-    if len(found_files) == 1 and found_files[0].endswith("merged_output.nc4"):
+    if len(found_files) == 1 and found_files[0].name == "merged_output.nc4":
         # Now we have to open the file and find the number of dimensions.
         try:
-            f = h5py.File(found_files[0], mode="r")
+            f = h5py.File(str(found_files[0]), mode="r", driver=_h5py_driver(found_files[0]))
             ds = f["/MergedSnapshots"]
             dims = ds.shape[1]
         finally:
@@ -71,11 +82,11 @@ def find_and_open_files(path, *args, **kwargs):
 
         if dims in (2, 3, 5):
             return ReciprocalMergedInstaseisDB(
-                db_path=path, netcdf_file=found_files[0], *args, **kwargs
+                db_path=path, netcdf_file=str(found_files[0]), *args, **kwargs
             )
         elif dims == 10:
             return ForwardMergedInstaseisDB(
-                db_path=path, netcdf_file=found_files[0], *args, **kwargs
+                db_path=path, netcdf_file=str(found_files[0]), *args, **kwargs
             )
         else:  # pragma: no cover
             raise NotImplementedError
@@ -83,11 +94,11 @@ def find_and_open_files(path, *args, **kwargs):
     # Parse to find the correct components.
     netcdf_files = collections.defaultdict(list)
     patterns = ["PX", "PZ", "MZZ", "MXX_P_MYY", "MXZ_MYZ", "MXY_MXX_M_MYY"]
-    for filename in found_files:
-        s = os.path.relpath(filename, path).split(os.path.sep)
+    for f in found_files:
+        parts = f.relative_to(root_path).parts
         for p in patterns:
-            if p in s:
-                netcdf_files[p].append(filename)
+            if p in parts:
+                netcdf_files[p].append(str(f))
 
     # Assert at most one file per type.
     for key, files in netcdf_files.items():

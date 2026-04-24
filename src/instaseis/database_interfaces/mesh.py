@@ -29,6 +29,11 @@ from obspy import UTCDateTime
 from scipy.spatial import cKDTree
 
 
+def _h5py_driver(path):
+    """Return the h5py VFD driver name appropriate for the given path."""
+    return "ros3" if str(path).startswith("s3://") else None
+
+
 class Buffer(object):
     """A simple memory-limited buffer with a dictionary-like interface.
     Implemented as a kind of priority queue where priority is highest for
@@ -126,8 +131,8 @@ class Mesh(object):
         displ_buffer_size_in_mb=0,
         read_on_demand=True,
     ):
-        self.f = h5py.File(filename, "r")
-        self.filename = filename
+        self.f = h5py.File(str(filename), "r", driver=_h5py_driver(filename))
+        self.filename = str(filename)
         self.read_on_demand = read_on_demand
         self._parse(full_parse=full_parse)
         self._find_time_axis()

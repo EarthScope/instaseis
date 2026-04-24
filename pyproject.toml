@@ -33,7 +33,8 @@ dependencies = [
     "requests",
     "geographiclib",
     "jsonschema >= 2.4.0",
-    "numba"
+    "numba",
+    "cloudpathlib[s3]"
 ]
 [project.optional-dependencies]
 gui = [
