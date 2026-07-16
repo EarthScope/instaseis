@@ -32,6 +32,8 @@ from .routes.finite_source import FiniteSourceSeismogramsHandler
 # The tests will catch if this no longer works with newer tornado versions.
 tornado.web.GZipContentEncoding.CONTENT_TYPES.add("application/vnd.geo+json")
 
+log = logging.getLogger(__name__)
+
 
 def get_application():
     """Return the tornado application.
@@ -74,7 +76,7 @@ def launch_io_loop(
         cases (which is also the worst case scenario) four buffers will be
         created so over time the maximum memory usage will be four times
         this value.
-    :param quiet: Do not log.
+    :param quiet: Deprecated. Does nothing now.
     :param log_level: The log level, one of CRITICAL, ERROR, WARNING, INFO,
         DEBUG, NOTSET
     :param max_size_of_finite_sources: The maximum allowed number of point
@@ -103,29 +105,9 @@ def launch_io_loop(
     # might take very long then so be aware!
     application.max_size_of_finite_sources = int(max_size_of_finite_sources)
 
-    if not quiet:
-        # Get all tornado loggers.
-        access_log = logging.getLogger("tornado.access")
-        app_log = logging.getLogger("tornado.application")
-        gen_log = logging.getLogger("tornado.general")
-        loggers = (access_log, app_log, gen_log)
-
-        # Console log handler.
-        ch = logging.StreamHandler()
-        # Add formatter
-        _format = "[%(asctime)s] - %(name)s - %(levelname)s: %(message)s"
-        formatter = logging.Formatter(_format)
-        ch.setFormatter(formatter)
-
-        log_level = getattr(logging, log_level)
-
-        for logger in loggers:
-            logger.addHandler(ch)
-            logger.setLevel(log_level)
-
-        # Log the database information.
-        app_log.info("Successfully opened DB")
-        app_log.info(str(application.db))
+    # Log the database information.
+    log.info("Successfully opened DB")
+    log.info(str(application.db))
 
     application.listen(port)
     tornado.ioloop.IOLoop.instance().start()
