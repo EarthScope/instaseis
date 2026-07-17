@@ -8,13 +8,14 @@
 """
 
 import concurrent.futures
+import functools
 import io
 import math
 import numpy as np
 import zipfile
 
 import obspy
-import tornado.gen
+import tornado.ioloop
 import tornado.web
 
 from ... import FiniteSource
@@ -376,19 +377,21 @@ class FiniteSourceSeismogramsHandler(InstaseisTimeSeriesHandler):
 
         return time_of_first_sample, earliest_starttime, latest_endtime
 
-    @tornado.gen.coroutine
-    def post(self):
+    async def post(self):
         # Parse the arguments. This will also perform a number of sanity
         # checks.
         args = self.parse_arguments()
         self.set_headers(args)
 
         # Coroutine + thread as potentially pretty expensive.
-        response = yield executor.submit(
-            _parse_and_resample_finite_source,
-            request=self.request,
-            max_size=self.application.max_size_of_finite_sources,
-            db_info=self.application.db.info,
+        response = await tornado.ioloop.IOLoop.current().run_in_executor(
+            executor,
+            functools.partial(
+                _parse_and_resample_finite_source,
+                request=self.request,
+                max_size=self.application.max_size_of_finite_sources,
+                db_info=self.application.db.info,
+            ),
         )
 
         # If an exception is returned from the task, re-raise it here.
@@ -450,22 +453,25 @@ class FiniteSourceSeismogramsHandler(InstaseisTimeSeriesHandler):
 
             # Yield from the task. This enables a context switch and thus
             # async behaviour.
-            response, _ = yield executor.submit(
-                _get_finite_source,
-                db=self.application.db,
-                finite_source=finite_source,
-                receiver=receiver,
-                components=list(args.components),
-                units=args.units,
-                dt=args.dt,
-                kernelwidth=args.kernelwidth,
-                scale=args.scale,
-                starttime=starttime,
-                endtime=endtime,
-                time_of_first_sample=time_of_first_sample,
-                format=args.format,
-                label=args.label,
-                sacheader=args.sacheader,
+            response, _ = await tornado.ioloop.IOLoop.current().run_in_executor(
+                executor,
+                functools.partial(
+                    _get_finite_source,
+                    db=self.application.db,
+                    finite_source=finite_source,
+                    receiver=receiver,
+                    components=list(args.components),
+                    units=args.units,
+                    dt=args.dt,
+                    kernelwidth=args.kernelwidth,
+                    scale=args.scale,
+                    starttime=starttime,
+                    endtime=endtime,
+                    time_of_first_sample=time_of_first_sample,
+                    format=args.format,
+                    label=args.label,
+                    sacheader=args.sacheader,
+                ),
             )
 
             # Check connection once again.
