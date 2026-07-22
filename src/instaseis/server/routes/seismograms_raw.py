@@ -8,10 +8,12 @@
 """
 
 import concurrent.futures
+import functools
 import io
 
 import numpy as np
 import obspy
+import tornado.ioloop
 import tornado.web
 
 from ... import Source, ForceSource, Receiver
@@ -128,8 +130,7 @@ class RawSeismogramsHandler(InstaseisTimeSeriesHandler):
             self.application.db.default_components
         )
 
-    @tornado.gen.coroutine
-    def get(self):
+    async def get(self):
         args = self.parse_arguments()
 
         # Figure out the type of source and construct the source object.
@@ -233,12 +234,15 @@ class RawSeismogramsHandler(InstaseisTimeSeriesHandler):
             )
             raise tornado.web.HTTPError(400, log_message=msg, reason=msg)
 
-        response = yield executor.submit(
-            _get_seismogram,
-            db=self.application.db,
-            source=source,
-            receiver=receiver,
-            components=components,
+        response = await tornado.ioloop.IOLoop.current().run_in_executor(
+            executor,
+            functools.partial(
+                _get_seismogram,
+                db=self.application.db,
+                source=source,
+                receiver=receiver,
+                components=components,
+            ),
         )
 
         # If an exception is returned from the task, re-raise it here.

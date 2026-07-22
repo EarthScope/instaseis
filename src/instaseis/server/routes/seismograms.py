@@ -8,6 +8,7 @@
 """
 
 import concurrent.futures
+import functools
 import inspect
 import io
 import json
@@ -20,7 +21,7 @@ from jsonschema import ValidationError as JSONValidationError
 import numpy as np
 import obspy
 from obspy.signal.interpolation import lanczos_interpolation
-import tornado.gen
+import tornado.ioloop
 import tornado.web
 
 from ... import Source, ForceSource, Receiver
@@ -578,28 +579,27 @@ class SeismogramsHandler(InstaseisTimeSeriesHandler):
                     )
         return receivers
 
-    @tornado.gen.coroutine
-    def post(self):
+    async def post(self):
         if "sourcewidth" in self.request.arguments.keys():
             msg = "Parameter 'sourcewidth' is not allowed for POST requests."
             raise tornado.web.HTTPError(400, log_message=msg, reason=msg)
 
         # Coroutine + thread as potentially pretty expensive.
-        response = yield executor.submit(
-            _parse_validate_and_resample_stf,
-            request=self.request,
-            db_info=self.application.db.info,
+        response = await tornado.ioloop.IOLoop.current().run_in_executor(
+            executor,
+            functools.partial(
+                _parse_validate_and_resample_stf,
+                request=self.request,
+                db_info=self.application.db.info,
+            ),
         )
 
         if isinstance(response, Exception):
             raise response
 
-        yield executor.submit(
-            self.get, custom_stf=response, nested_executor=True
-        )
+        await self.get(custom_stf=response)
 
-    @tornado.gen.coroutine
-    def get(self, custom_stf=None, nested_executor=False):
+    async def get(self, custom_stf=None):
         """:param nested_exectuor: Will not launch another executor, if true.
         Somehow tornado >= 5.0 does not like nested threads. Might be a
         good idea performance wise in any case.
@@ -711,8 +711,9 @@ class SeismogramsHandler(InstaseisTimeSeriesHandler):
 
             # Yield from the task. This enables a context switch and thus
             # async behaviour.
-            if not nested_executor:
-                response, mu = yield executor.submit(
+            response, mu = await tornado.ioloop.IOLoop.current().run_in_executor(
+                executor,
+                functools.partial(
                     _get_seismogram,
                     db=self.application.db,
                     source=source,
@@ -727,24 +728,8 @@ class SeismogramsHandler(InstaseisTimeSeriesHandler):
                     format=args.format,
                     label=args.label,
                     sacheader=args.sacheader,
-                )
-            else:
-                response, mu = _get_seismogram(
-                    db=self.application.db,
-                    source=source,
-                    receiver=receiver,
-                    components=list(args.components),
-                    units=args.units,
-                    dt=args.dt,
-                    kernelwidth=args.kernelwidth,
-                    starttime=starttime,
-                    endtime=endtime,
-                    scale=args.scale,
-                    format=args.format,
-                    label=args.label,
-                    sacheader=args.sacheader,
-                )
-
+                ),
+            )
             # Check connection once again.
             if self.connection_closed:  # pragma: no cover
                 self.flush()

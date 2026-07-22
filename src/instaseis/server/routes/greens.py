@@ -9,11 +9,12 @@
 """
 
 import concurrent.futures
+import functools
 import io
 import zipfile
 
 import obspy
-import tornado.gen
+import tornado.ioloop
 import tornado.web
 
 from ... import Source, Receiver, ForceSource
@@ -179,8 +180,7 @@ class GreensFunctionHandler(InstaseisTimeSeriesHandler):
             )
             raise tornado.web.HTTPError(400, log_message=msg, reason=msg)
 
-    @tornado.gen.coroutine
-    def get(self):
+    async def get(self):
         # Parse the arguments. This will also perform a number of sanity
         # checks.
         args = self.parse_arguments()
@@ -222,20 +222,23 @@ class GreensFunctionHandler(InstaseisTimeSeriesHandler):
 
         # Yield from the task. This enables a context switch and thus
         # async behaviour.
-        response, mu = yield executor.submit(
-            _get_greens,
-            db=self.application.db,
-            epicentral_distance_degree=args.sourcedistanceindegrees,
-            source_depth_in_m=args.sourcedepthinmeters,
-            units=args.units,
-            dt=args.dt,
-            kernelwidth=args.kernelwidth,
-            origintime=args.origintime,
-            starttime=starttime,
-            endtime=endtime,
-            format=args.format,
-            label=args.label,
-            sacheader=args.sacheader,
+        response, mu = await tornado.ioloop.IOLoop.current().run_in_executor(
+            executor,
+            functools.partial(
+                _get_greens,
+                db=self.application.db,
+                epicentral_distance_degree=args.sourcedistanceindegrees,
+                source_depth_in_m=args.sourcedepthinmeters,
+                units=args.units,
+                dt=args.dt,
+                kernelwidth=args.kernelwidth,
+                origintime=args.origintime,
+                starttime=starttime,
+                endtime=endtime,
+                format=args.format,
+                label=args.label,
+                sacheader=args.sacheader,
+            ),
         )
 
         # If an exception is returned from the task, re-raise it here.

@@ -61,8 +61,6 @@ def launch_io_loop(
     db_path,
     port,
     buffer_size_in_mb,
-    quiet,
-    log_level,
     max_size_of_finite_sources=1000,
     station_coordinates_callback=None,
     event_info_callback=None,
@@ -76,9 +74,6 @@ def launch_io_loop(
         cases (which is also the worst case scenario) four buffers will be
         created so over time the maximum memory usage will be four times
         this value.
-    :param quiet: Deprecated. Does nothing now.
-    :param log_level: The log level, one of CRITICAL, ERROR, WARNING, INFO,
-        DEBUG, NOTSET
     :param max_size_of_finite_sources: The maximum allowed number of point
         sources in a single finite source for the /finite_source route.
     :param station_coordinates_callback: A callback function for station
