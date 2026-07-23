@@ -162,9 +162,9 @@ class InstaseisTimeSeriesHandler(InstaseisRequestHandler, metaclass=ABCMeta):
             # Also make sure it does not downsample.
             if args.dt is not None and args.dt > info.dt:
                 msg = (
-                    "Cannot downsample. The sampling interval of the "
-                    "database is %.5f seconds. Make sure to choose a "
-                    "smaller or equal one." % info.dt
+                    "Cannot downsample. The sampling interval dt=%.5f "
+                    "exceeds %.5f seconds. Make sure to choose a "
+                    "smaller or equal one." % (args.dt, info.dt)
                 )
                 raise tornado.web.HTTPError(400, log_message=msg, reason=msg)
 
